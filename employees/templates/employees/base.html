@@ -1,0 +1,63 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8">
+    <title>Employee Managment System</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" >
+    <link href="{% static 'css/bootstrap.min.css' %}" rel="stylesheet">
+    <body class="d-flex flex-column min-vh-100">
+      <nav class="navbar navbar-expand-lg bg-primary" data-bs-theme="dark">
+        <div class="container-fluid">
+          <a class="navbar-brand" href="{% url 'index' %}">
+            <i class="fa-solid fa-plane fa-lg"></i> Employee Managment System
+          </a>
+          <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarColor01" aria-controls="navbarColor01" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+          </button>
+
+          <div class="collapse navbar-collapse" id="navbarColor01">
+            <ul class="navbar-nav me-auto">
+              <li class="nav-item">
+                <a class="nav-link" href="{% url 'index' %}">
+                  <i class="fa-solid fa-list fa-lg"></i> Employees
+                </a>
+              </li>
+              <li class="nav-item dropdown">
+                <a class="nav-link dropdown-toggle" data-bs-toggle="dropdown" href="#" role="button" aria-haspopup="true" aria-expanded="false">
+                  <i class="fa-solid fa-id-badge"></i> Permissions
+                </a>
+                <div class="dropdown-menu">
+                  <a class="dropdown-item" href="#">Internal permissions</a>
+                  <a class="dropdown-item" href="#">External permissions</a>
+                </div>
+              </li>
+            </ul>
+            <ul class="navbar-nav ms-auto">
+              <li class="nav-item bg-white" style="border-radius: 0.25rem;"> <!-- Added bg-white and border-radius for rounded corners -->
+                <a class="nav-link" href="{% url 'add' %}" style="color: #333;"> <!-- Added inline style for color -->
+                  <i class="fa-solid fa-plus"></i> Add Employee
+                </a>
+              </li>
+            </ul>
+            <form class="d-flex">
+              <input class="form-control me-sm-2" type="search" placeholder="Search">
+              <button class="btn btn-secondary my-2 my-sm-0" type="submit">Search</button>
+            </form>
+          </div>
+        </div>
+      </nav>
+      <div class="container-fluid">
+        {% block body %}
+        {% endblock %}
+      </div>
+      <footer class="footer mt-auto mb-4">
+        <div class="text-center">
+          <span>
+            Copyrigth &copy; <script>document.write(new Date().getFullYear())</script> Paulius Jakonis
+          </span>
+        </div>
+      <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"></script>
+    </body>
+  </head>
+</html>
