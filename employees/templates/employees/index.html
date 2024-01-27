@@ -63,12 +63,8 @@
                           <th scope="col">Employee Number</th>
                           <th scope="col">First Name</th>
                           <th scope="col">Last Name</th>
-                          <th scope="col">Date Of Birth</th>
                           <th scope="col">Department</th>
                           <th scope="col">Position</th>
-                          <th scope="col">Email</th>
-                          <th scope="col">Phone number</th>
-                          <th scope="col">Adress</th>
                           <th scope="col">Actions</th>
                         </tr>
                       </thead>
@@ -78,13 +74,70 @@
                             <td>{{ employee.employee_number }}</td>
                             <td>{{ employee.first_name }}</td>
                             <td>{{ employee.last_name }}</td>
-                            <td>{{ employee.date_of_birth }}</td>
                             <td>{{ employee.department }}</td>
                             <td>{{ employee.position }}</td>
-                            <td>{{ employee.email }}</td>
-                            <td>{{ employee.phone_number }}</td>
-                            <td>{{ employee.address }}</td>
-                            <td>ACTIONS</td>
+                            <td>
+                              <button type="button" class="btn btn-success me-1" data-bs-toggle="modal" data-bs-target="#myModal{{employee.id}}">
+                                <i class="fa-solid fa-circle-info fa-lg"></i>
+                              </button>
+                              <div class="modal" id="myModal{{employee.id}}" tabindex="-1" aria-labelledby="modalLabel{{employee.id}}" aria-hidden="true">
+                                <div class="modal-dialog" role="document">
+                                  <div class="modal-content">
+                                    <div class="modal-header">
+                                      <h5 class="modal-title" id="modalLabel{{employee.id}}">
+                                        {{ employee.first_name }} {{ employee.last_name }}
+                                      </h5>
+                                      <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                    </div>
+                                    <div class="modal-body">
+                                      <table class="table">
+                                          <tbody>
+                                            <tr>
+                                              <th scope="row">Employee Number</th>
+                                              <td>{{ employee.employee_number }}</td>
+                                            </tr>
+                                            <tr>
+                                              <th scope="row">First Name</th>
+                                              <td>{{ employee.first_name }}</td>
+                                            </tr>
+                                            <tr>
+                                              <th scope="row">Last Name</th>
+                                              <td>{{ employee.last_name }}</td>
+                                            </tr>
+                                            <tr>
+                                              <th scope="row">Date Of Birth</th>
+                                              <td>{{ employee.date_of_birth }}</td>
+                                            </tr>
+                                            <tr>
+                                              <th scope="row">Department</th>
+                                              <td>{{ employee.department }}</td>
+                                            </tr>
+                                            <tr>
+                                              <th scope="row">Position</th>
+                                              <td>{{ employee.position }}</td>
+                                            </tr>
+                                            <tr>
+                                              <th scope="row">Email</th>
+                                              <td>{{ employee.email }}</td>
+                                            </tr>
+                                            <tr>
+                                              <th scope="row">Phone Number</th>
+                                              <td>{{ employee.phone_number }}</td>
+                                            </tr>
+                                            <tr>
+                                              <th scope="row">Address</th>
+                                              <td>{{ employee.address }}</td>
+                                            </tr>
+                                          </tbody>
+                                        </table>
+                                    </div>
+                                    <div class="modal-footer">
+                                      <button type="button" class="btn btn-primary" data-bs-dismiss="modal">Close</button>
+                                    </div>
+                                  </div>
+                                </div>
+                              </div>
+                            </td>
                           </tr>
                         {% endfor %}
                       </tbody>
