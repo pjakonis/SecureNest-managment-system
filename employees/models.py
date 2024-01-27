@@ -11,7 +11,7 @@ class Employee(models.Model):
     position = models.CharField(max_length=30)
     email = models.EmailField(max_length=30)
     phone_number = models.CharField(max_length=30)
-    adress = models.CharField(max_length=30)
+    address = models.CharField(max_length=30)
 
     def __str__(self):
-        return f'Student: {self.first_name} {self.last_name}'
+        return f'{self.first_name} {self.last_name}'
