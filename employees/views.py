@@ -8,9 +8,15 @@ from .forms import EmployeeForm
 
 
 # Create your views here.
-def index (request):
-    return render(request,'employees/index.html', {
-        'employees': Employee.objects.all()
+def index(request):
+    sort_by = request.GET.get('sort', 'employee_number')
+    order = request.GET.get('order', 'asc')
+    if order == 'desc':
+        sort_by = '-' + sort_by
+    employees = Employee.objects.all().order_by(sort_by)
+
+    return render(request, 'employees/index.html', {
+        'employees': employees
     })
 
 def view_employee(request, id):
