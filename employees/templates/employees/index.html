@@ -1,14 +1,18 @@
 {% extends 'employees/base.html' %}
 
 {% block body %}
-<h3 class="m-4">Employees</h3>
-<div class="row">
+<div class="row mt-5">
   <div class="col-12">
     {% if employees %}
     <div class="card bg-light ms-4 me-4 mb-4">
-      <div class="card-header">
+      <div class="card-header d-flex justify-content-between align-items-center">
+    <div>
         <i class="fa-solid fa-list fa-lg"></i> Employees
-      </div>
+    </div>
+    <a href="{% url 'add' %}" class="btn btn-outline-primary" role="button">
+        <i class="fa-solid fa-plus"></i> Add Employee
+    </a>
+</div>
       <div class="card-body">
         <p class="card-text">
           <div class="table-responsive">
