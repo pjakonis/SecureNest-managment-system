@@ -1,7 +1,6 @@
 from django.db import models
+from django.core.validators import MinValueValidator
 
-
-# Create your models here.
 
 class Employee(models.Model):
     VERIFICATION_ACTIVE = 'A'
@@ -16,35 +15,61 @@ class Employee(models.Model):
 
     first_name = models.CharField(max_length=25)
     last_name = models.CharField(max_length=50)
-    date_of_birth = models.DateField()
-    department = models.CharField(max_length=30)
-    position = models.CharField(max_length=30)
-    hire_date = models.DateField(null=True)
+    hire_date = models.DateField(default=None, null=True)
+    department = models.ForeignKey('Department', on_delete=models.CASCADE)
+    position = models.ForeignKey('Position', on_delete=models.CASCADE)
     verification = models.CharField(max_length=1, choices=VERIFICATION_CHOICES, default=VERIFICATION_ACTIVE)
 
 
     def __str__(self):
         return f'{self.first_name} {self.last_name}'
 
+    class Meta:
+        ordering = ['first_name']
+        verbose_name_plural = 'Employees'
+        verbose_name = 'Employee'
+
 
 class Employee_information(models.Model):
+    employee = models.OneToOneField(Employee, on_delete=models.CASCADE, primary_key=True)
+    date_of_birth = models.DateField(null=True)
     email = models.EmailField(unique=True, null=True)
     phone_number = models.CharField(max_length=30, unique=True)
     street = models.CharField(max_length=255)
     city = models.CharField(max_length=50)
     zip_code = models.CharField(max_length=10)
     country = models.CharField(max_length=50)
-    employee = models.OneToOneField(Employee, on_delete=models.CASCADE, primary_key=True)
+
+    def __str__(self):
+        return f'{self.employee.first_name} {self.employee.last_name}'
+
+    class Meta:
+        ordering = ['employee__first_name']
+        verbose_name_plural = 'Employee information'
 
 
 class Department(models.Model):
     name = models.CharField(max_length=50, unique=True)
-    employee = models.ForeignKey('Employee', on_delete=models.CASCADE, related_name='employee_department')
+
+    def __str__(self):
+        return self.name
+
+    class Meta:
+        ordering = ['name']
+        verbose_name_plural = 'Departments'
+        verbose_name = 'Department'
 
 
 class Position(models.Model):
     name = models.CharField(max_length=50, unique=True)
-    employee = models.ForeignKey('Employee', on_delete=models.CASCADE, related_name='employee_position')
+
+    def __str__(self):
+        return self.name
+
+    class Meta:
+        ordering = ['name']
+        verbose_name_plural = 'Positions'
+        verbose_name = 'Position'
 
 
 class Internal_permission(models.Model):
@@ -64,18 +89,34 @@ class Internal_permission(models.Model):
         (TAG_REJECTED, TAG_REJECTED_NAME),
     ]
 
+    employee = models.ForeignKey(Employee, on_delete=models.CASCADE)
     permit_number = models.CharField(max_length=10, unique=True)
     permit_issue_date = models.DateField()
     permit_expiry_date = models.DateField()
-    description = models.TextField(max_length=255)
+    description = models.TextField(max_length=255, null=True, blank=True)
     tag = models.CharField(max_length=2, choices=TAG_CHOICES, default=TAG_REJECTED)
-    employee = models.ForeignKey(Employee, on_delete=models.CASCADE)
+
+    def __str__(self):
+        return f'{self.employee.first_name} {self.employee.last_name} {self.permit_number}'
+
+    class Meta:
+        ordering = ['employee__first_name']
+        verbose_name_plural = 'Internal permissions'
+        verbose_name = 'Internal permission'
 
 
 class External_permission(models.Model):
+    employee = models.ForeignKey(Employee, on_delete=models.CASCADE)
     permit_number = models.CharField(max_length=10, unique=True)
     permit_issue_date = models.DateField()
     permit_expiry_date = models.DateField()
-    employee = models.ForeignKey(Employee, on_delete=models.CASCADE)
+
+    def __str__(self):
+        return f'{self.employee.first_name} {self.employee.last_name} {self.permit_number}'
+
+    class Meta:
+        ordering = ['employee__first_name']
+        verbose_name_plural = 'External permissions'
+        verbose_name = 'External permission'
 
 

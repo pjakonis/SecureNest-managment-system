@@ -2,14 +2,13 @@ from django.http import HttpResponseRedirect
 from django.shortcuts import render
 from django.urls import reverse
 
-from .models import Employee
+from .models import Employee, Employee_information, Department, Position, Internal_permission, External_permission
 from .forms import EmployeeForm
-
 
 
 # Create your views here.
 def index(request):
-    sort_by = request.GET.get('sort', 'employee_number')
+    sort_by = request.GET.get('sort', 'id')
     order = request.GET.get('order', 'asc')
     if order == 'desc':
         sort_by = '-' + sort_by
@@ -27,22 +26,16 @@ def add_employee(request):
     if request.method == 'POST':
         form = EmployeeForm(request.POST)
         if form.is_valid():
-            # Form processing and saving new employee
             new_employee = form.save()
-            # Redirecting to the index page or showing success message
-            # If you want to redirect:
-            # return HttpResponseRedirect(reverse('index'))
             return render(request, 'employees/add.html', {
-                'form': EmployeeForm(),  # Initializing a new blank form
+                'form': EmployeeForm(),
                 'success': True
             })
         else:
-            # If the form is not valid, render the page with the form containing errors
             return render(request, 'employees/add.html', {
                 'form': form
             })
     else:
-        # Initializing a blank form for GET requests
         form = EmployeeForm()
         return render(request, 'employees/add.html', {
             'form': form
