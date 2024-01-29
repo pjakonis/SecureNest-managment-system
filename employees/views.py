@@ -70,3 +70,4 @@ def delete(request, id):
         employee = Employee.objects.get(pk=id)
         employee.delete()
     return HttpResponseRedirect(reverse('index'))
+
