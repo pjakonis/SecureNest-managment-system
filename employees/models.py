@@ -19,8 +19,9 @@ class Employee(models.Model):
     date_of_birth = models.DateField()
     department = models.CharField(max_length=30)
     position = models.CharField(max_length=30)
-    hire_date = models.DateField()
+    hire_date = models.DateField(null=True)
     verification = models.CharField(max_length=1, choices=VERIFICATION_CHOICES, default=VERIFICATION_ACTIVE)
+
 
     def __str__(self):
         return f'{self.first_name} {self.last_name}'
@@ -38,12 +39,12 @@ class Employee_information(models.Model):
 
 class Department(models.Model):
     name = models.CharField(max_length=50, unique=True)
-    employee = models.OneToOneField(Employee, on_delete=models.CASCADE, primary_key=True)
+    employee = models.ForeignKey('Employee', on_delete=models.CASCADE, related_name='employee_department')
 
 
 class Position(models.Model):
     name = models.CharField(max_length=50, unique=True)
-    employee = models.OneToOneField(Employee, on_delete=models.CASCADE, primary_key=True)
+    employee = models.ForeignKey('Employee', on_delete=models.CASCADE, related_name='employee_position')
 
 
 class Internal_permission(models.Model):
