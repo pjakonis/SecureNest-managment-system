@@ -3,6 +3,7 @@
 {% block body %}
 <div class="row mt-5">
   <div class="col-12">
+
     {% if employees %}
     <div class="card bg-light ms-4 me-4 mb-4">
       <div class="card-header d-flex justify-content-between align-items-center">
@@ -18,7 +19,7 @@
           <table class="table table-hover">
             <thead>
               <tr>
-                <th scope="col"><a href="?sort=employee_number&order={% if request.GET.sort == 'employee_number' and request.GET.order == 'asc' %}desc{% else %}asc{% endif %}">Employee Number</a></th>
+                <th scope="col"><a>Employee Number</a></th>
                 <th scope="col"><a href="?sort=first_name&order={% if request.GET.sort == 'first_name' and request.GET.order == 'asc' %}desc{% else %}asc{% endif %}">First Name</a></th>
                 <th scope="col"><a href="?sort=last_name&order={% if request.GET.sort == 'last_name' and request.GET.order == 'asc' %}desc{% else %}asc{% endif %}">Last Name</a></th>
                 <th scope="col"><a href="?sort=department&order={% if request.GET.sort == 'department' and request.GET.order == 'asc' %}desc{% else %}asc{% endif %}">Department</a></th>
@@ -32,8 +33,8 @@
                   <td>{{ employee.id }}</td>
                   <td>{{ employee.first_name }}</td>
                   <td>{{ employee.last_name }}</td>
-                  <td>{{ departament.name }}</td>
-                  <td>{{ position.name }}</td>
+                  <td>{{ employee.department }}</td>
+                  <td>{{ employee.position }}</td>
                   <td>
                       <button type="button" class="btn btn-success me-1" data-bs-toggle="modal" data-bs-target="#myModal{{employee.id}}">
                         <i class="fa-solid fa-circle-info fa-lg"></i>
@@ -52,40 +53,40 @@
                               <table class="table">
                                   <tbody>
                                     <tr>
-                                      <th scope="row">First Name</th>
-                                      <td>{{ employee.first_name }}</td>
+                                      <th scope="row">Department</th>
+                                      <td>{{ employee.department }}</td>
                                     </tr>
                                     <tr>
-                                      <th scope="row">Last Name</th>
-                                      <td>{{ employee.last_name }}</td>
+                                      <th scope="row">Position</th>
+                                      <td>{{ employee.position }}</td>
                                     </tr>
                                     <tr>
                                       <th scope="row">Date Of Birth</th>
-                                      <td>{{ employee.date_of_birth }}</td>
+                                      <td>{{ employee.employee_information.date_of_birth }}</td>
                                     </tr>
                                     <tr>
                                       <th scope="row">Email</th>
-                                      <td>{{ employee_information.email }}</td>
+                                      <td>{{ employee.employee_information.email }}</td>
                                     </tr>
                                     <tr>
                                       <th scope="row">Phone</th>
-                                      <td>{{ employee_information.phone_number }}</td>
+                                      <td>{{ employee.employee_information.phone_number }}</td>
                                     </tr>
                                     <tr>
                                       <th scope="row">Address</th>
-                                      <td>{{ employee_information.street }}</td>
+                                      <td>{{ employee.employee_information.street }}</td>
                                     </tr>
                                     <tr>
                                       <th scope="row">City</th>
-                                      <td>{{ employee_information.city }}</td>
+                                      <td>{{ employee.employee_information.city }}</td>
                                     </tr>
                                     <tr>
                                       <th scope="row">ZIP code</th>
-                                      <td>{{ employee_information.zip_code }}</td>
+                                      <td>{{ employee.employee_information.zip_code }}</td>
                                     </tr>
                                     <tr>
                                       <th scope="row">Country</th>
-                                      <td>{{ employee_information.country }}</td>
+                                      <td>{{ employee.employee_information.country }}</td>
                                     </tr>
                                   </tbody>
                                 </table>
@@ -97,7 +98,7 @@
                         </div>
                       </div>
 
-                      <a class="btn btn-warning me-1" href="{% url 'edit' employee.id %}">
+                      <a class="btn btn-warning me-1" href="{% url 'edit_employee' employee.id %}">
                         <i class="fa-solid fa-pen-to-square fa-lg"></i>
                         </a>
                         <button type="button" class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#deleteModal{{employee.id}}">

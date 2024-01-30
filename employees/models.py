@@ -32,13 +32,13 @@ class Employee(models.Model):
 
 class Employee_information(models.Model):
     employee = models.OneToOneField(Employee, on_delete=models.CASCADE, primary_key=True)
-    date_of_birth = models.DateField(null=True)
-    email = models.EmailField(unique=True, null=True)
-    phone_number = models.CharField(max_length=30, unique=True)
-    street = models.CharField(max_length=255)
-    city = models.CharField(max_length=50)
-    zip_code = models.CharField(max_length=10)
-    country = models.CharField(max_length=50)
+    date_of_birth = models.DateField(null=True, blank=True)
+    email = models.EmailField(unique=True, null=True, blank=True)
+    phone_number = models.CharField(max_length=30, unique=True, null=True, blank=True, default=None)
+    street = models.CharField(max_length=255, null=True, blank=True)
+    city = models.CharField(max_length=50, null=True, blank=True)
+    zip_code = models.CharField(max_length=10, null=True, blank=True)
+    country = models.CharField(max_length=50, null=True, blank=True)
 
     def __str__(self):
         return f'{self.employee.first_name} {self.employee.last_name}'
@@ -90,9 +90,9 @@ class Internal_permission(models.Model):
     ]
 
     employee = models.ForeignKey(Employee, on_delete=models.CASCADE)
-    permit_number = models.CharField(max_length=10, unique=True)
-    permit_issue_date = models.DateField()
-    permit_expiry_date = models.DateField()
+    permit_number = models.CharField(max_length=10, unique=True, null=True, blank=True)
+    permit_issue_date = models.DateField(null=True, blank=True)
+    permit_expiry_date = models.DateField(null=True, blank=True)
     description = models.TextField(max_length=255, null=True, blank=True)
     tag = models.CharField(max_length=2, choices=TAG_CHOICES, default=TAG_REJECTED)
 
@@ -107,9 +107,9 @@ class Internal_permission(models.Model):
 
 class External_permission(models.Model):
     employee = models.ForeignKey(Employee, on_delete=models.CASCADE)
-    permit_number = models.CharField(max_length=10, unique=True)
-    permit_issue_date = models.DateField()
-    permit_expiry_date = models.DateField()
+    permit_number = models.CharField(max_length=10, unique=True, null=True, blank=True)
+    permit_issue_date = models.DateField(null=True, blank=True)
+    permit_expiry_date = models.DateField(null=True, blank=True)
 
     def __str__(self):
         return f'{self.employee.first_name} {self.employee.last_name} {self.permit_number}'
