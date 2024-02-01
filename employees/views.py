@@ -1,7 +1,8 @@
-from django.http import HttpResponseRedirect
+from django.http import HttpResponseRedirect, HttpResponseNotAllowed
 from django.shortcuts import render
 from django.urls import reverse
 from django.shortcuts import render, get_object_or_404, redirect
+from django.views.decorators.http import require_POST
 
 from .models import Employee, Employee_information, Department, Position, Internal_permission, External_permission
 from .forms import EmployeeForm, EmployeeInformationForm
@@ -9,13 +10,21 @@ from .forms import EmployeeForm, EmployeeInformationForm
 
 # Create your views here.
 def index(request):
+    # Simplify this view to just render the index.html without any specific data if that's your intention
+    return render(request, 'employees/index.html')
+
+
+def valid_employees(request):
     sort_by = request.GET.get('sort', 'id')
     order = request.GET.get('order', 'asc')
     if order == 'desc':
         sort_by = '-' + sort_by
-    employees = Employee.objects.all().prefetch_related('employee_information').order_by(sort_by)
 
-    return render(request, 'employees/index.html', {
+    # Filter the employees based on your definition of 'valid'
+    employees = Employee.objects.filter(verification=Employee.VERIFICATION_ACTIVE).prefetch_related(
+        'employee_information').order_by(sort_by)
+
+    return render(request, 'employees/active_employees.html', {
         'employees': employees
     })
 
@@ -32,7 +41,7 @@ def view_employee(request, id):
         'department': department,
         'position': position
     }
-    return render(request, 'employees/view_employee.html', context)
+    return render(request, 'employees/view_employees.html', context)
 
 
 def add_employee(request):
@@ -54,6 +63,7 @@ def add_employee(request):
             'form': form
         })
 
+
 def add_employee_information(request):
     if request.method == 'POST':
         form = EmployeeInformationForm(request.POST)
@@ -72,6 +82,7 @@ def add_employee_information(request):
         return render(request, 'employees/add.html', {
             'form': form
         })
+
 
 def edit_employee(request, pk):
     employee = get_object_or_404(Employee, pk=pk)
@@ -93,9 +104,34 @@ def edit_employee(request, pk):
         'info_form': info_form,
         'employee': employee  # Pass the employee object to the template
     })
+
+
 def delete(request, id):
     if request.method == 'POST':
-        employee = Employee.objects.get(pk=id)
-        employee.delete()
-    return HttpResponseRedirect(reverse('index'))
+        employee = get_object_or_404(Employee, pk=id)
+        employee.verification = Employee.VERIFICATION_INACTIVE
+        employee.save()
+        return redirect('active_employees')
+    else:
+        return HttpResponseNotAllowed(['POST'], 'Method Not Allowed')
 
+
+def inactive_employees(request):
+    sort_by = request.GET.get('sort', 'id')
+    order = request.GET.get('order', 'asc')
+    if order == 'desc':
+        sort_by = '-' + sort_by
+
+    employees = Employee.objects.filter(verification=Employee.VERIFICATION_INACTIVE).order_by(sort_by)
+
+    return render(request, 'employees/inactive_employees.html', {
+        'employees': employees
+    })
+
+
+@require_POST
+def reactivate_employee(request, id):
+    employee = get_object_or_404(Employee, pk=id)
+    employee.verification = Employee.VERIFICATION_ACTIVE
+    employee.save()
+    return redirect('inactive_employees')  # Redirect to the list of inactive employees or wherever appropriate

@@ -20,7 +20,6 @@ class Employee(models.Model):
     position = models.ForeignKey('Position', on_delete=models.CASCADE)
     verification = models.CharField(max_length=1, choices=VERIFICATION_CHOICES, default=VERIFICATION_ACTIVE)
 
-
     def __str__(self):
         return f'{self.first_name} {self.last_name}'
 
@@ -118,5 +117,4 @@ class External_permission(models.Model):
         ordering = ['employee__first_name']
         verbose_name_plural = 'External permissions'
         verbose_name = 'External permission'
-
 

@@ -12,17 +12,21 @@ from datetime import timedelta
 
 admin.site.site_header = 'EMS Admin'
 
+
 class EmployeeInformationInline(admin.StackedInline):
     model = Employee_information
     extra = 0
+
 
 class InternalPermissionInline(admin.StackedInline):
     model = Internal_permission
     extra = 0
 
+
 class ExternalPermissionInline(admin.StackedInline):
     model = External_permission
     extra = 0
+
 
 @admin.register(Employee)
 class EmployeeAdmin(admin.ModelAdmin):
@@ -31,7 +35,8 @@ class EmployeeAdmin(admin.ModelAdmin):
     list_per_page = 10
     list_editable = ['verification']
     list_filter = ['department', 'verification']
-    search_fields = ['first_name__istartswith', 'last_name__istartswith', 'department__name__istartswith', 'position__name__istartswith']
+    search_fields = ['first_name__istartswith', 'last_name__istartswith', 'department__name__istartswith',
+                     'position__name__istartswith']
     inlines = [EmployeeInformationInline, InternalPermissionInline, ExternalPermissionInline]
 
 
@@ -96,6 +101,7 @@ class PermissionFilter(admin.SimpleListFilter):
         elif self.value() == 'Expired':
             return queryset.filter(permit_expiry_date__lte=valid)
 
+
 @admin.register(Internal_permission)
 class Internal_permissionAdmin(admin.ModelAdmin):
     autocomplete_fields = ['employee']
@@ -134,7 +140,8 @@ class External_permissionAdmin(admin.ModelAdmin):
     autocomplete_fields = ['employee']
     list_display = ['employee', 'permit_number', 'expires_in']
     list_per_page = 10
-    search_fields = ['employee__first_name__istartswith', 'employee__last_name__istartswith', 'permit_number__istartswith']
+    search_fields = ['employee__first_name__istartswith', 'employee__last_name__istartswith',
+                     'permit_number__istartswith']
     list_filter = [PermissionFilter]
 
     @admin.display(ordering='permit_expiry_date')

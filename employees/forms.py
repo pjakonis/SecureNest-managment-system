@@ -20,7 +20,7 @@ class EmployeeForm(forms.ModelForm):
             'hire_date': forms.DateInput(attrs={'class': 'form-control', 'type': 'date'}, format='%Y-%m-%d'),
             'department': forms.Select(attrs={'class': 'form-control'}),
             'position': forms.Select(attrs={'class': 'form-control'}),
-            'verification': forms.Select(attrs={'class': 'form-control'}),
+            'verification': forms.HiddenInput(),
         }
 
 
@@ -47,4 +47,3 @@ class EmployeeInformationForm(forms.ModelForm):
             'zip_code': forms.TextInput(attrs={'class': 'form-control'}),
             'country': forms.TextInput(attrs={'class': 'form-control'}),
         }
-
