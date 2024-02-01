@@ -1,5 +1,5 @@
 from django import forms
-from .models import Employee, Employee_information, Department, Position, Internal_permission, External_permission
+from .models import Employee, Employee_information, Department, Position, Internal_permission, External_permission, DeactivationLog
 
 
 class EmployeeForm(forms.ModelForm):
@@ -46,4 +46,20 @@ class EmployeeInformationForm(forms.ModelForm):
             'city': forms.TextInput(attrs={'class': 'form-control'}),
             'zip_code': forms.TextInput(attrs={'class': 'form-control'}),
             'country': forms.TextInput(attrs={'class': 'form-control'}),
+        }
+
+
+class DeactivationLogForm(forms.ModelForm):
+    class Meta:
+        model = DeactivationLog
+        fields = '__all__'
+        labels = {
+            'employee': 'Employee',
+            'deactivation_date': 'Deactivation Date',
+            'comments': 'Comments',
+        }
+        widgets = {
+            'employee': forms.HiddenInput(),
+            'deactivation_date': forms.DateInput(attrs={'class': 'form-control', 'type': 'date'}, format='%Y-%m-%d'),
+            'comments': forms.Textarea(attrs={'class': 'form-control'}),
         }

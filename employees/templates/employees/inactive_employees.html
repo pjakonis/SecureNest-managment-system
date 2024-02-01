@@ -14,6 +14,7 @@
         <div class="table-responsive">
           <table class="table table-hover">
             <thead>
+
             <tr>
               <th scope="col"><a
                       href="?sort=first_name&order={% if request.GET.sort == 'first_name' and request.GET.order == 'asc' %}desc{% else %}asc{% endif %}">First
@@ -27,6 +28,10 @@
               <th scope="col"><a
                       href="?sort=position&order={% if request.GET.sort == 'position' and request.GET.order == 'asc' %}desc{% else %}asc{% endif %}">Position</a>
               </th>
+              <th scope="col"><a
+                        href="?sort=last_deactivation_date&order={% if request.GET.sort == 'last_deactivation_date' and request.GET.order == 'asc' %}desc{% else %}asc{% endif %}">
+                    Deactivation Date</a></th>
+              </th>
               <th scope="col">Actions</th>
             </tr>
             </thead>
@@ -37,6 +42,8 @@
               <td>{{ employee.last_name }}</td>
               <td>{{ employee.department }}</td>
               <td>{{ employee.position }}</td>
+              <td>{{ employee.last_deactivation_date }}</td>
+
               <td>
                 <button type="button" class="btn btn-info me-1" data-bs-toggle="modal"
                         data-bs-target="#myModal{{employee.id}}">

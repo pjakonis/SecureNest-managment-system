@@ -4,8 +4,8 @@ from django.urls import reverse
 from django.shortcuts import render, get_object_or_404, redirect
 from django.views.decorators.http import require_POST
 
-from .models import Employee, Employee_information, Department, Position, Internal_permission, External_permission
-from .forms import EmployeeForm, EmployeeInformationForm
+from .models import Employee, Employee_information, Department, Position, Internal_permission, External_permission, DeactivationLog
+from .forms import EmployeeForm, EmployeeInformationForm, DeactivationLogForm
 
 
 # Create your views here.
@@ -94,7 +94,7 @@ def edit_employee(request, pk):
         if form.is_valid() and info_form.is_valid():
             form.save()
             info_form.save()
-            return redirect('index')
+            return redirect('active_employees')
     else:
         form = EmployeeForm(instance=employee)
         info_form = EmployeeInformationForm(instance=employee_information)
@@ -102,18 +102,30 @@ def edit_employee(request, pk):
     return render(request, 'employees/edit.html', {
         'form': form,
         'info_form': info_form,
-        'employee': employee  # Pass the employee object to the template
+        'employee': employee
     })
 
 
-def delete(request, id):
+def delete(request, pk):
+    employee = get_object_or_404(Employee, pk=pk)
+    deactivationlog = get_object_or_404(DeactivationLog, employee=employee)
+
     if request.method == 'POST':
-        employee = get_object_or_404(Employee, pk=id)
-        employee.verification = Employee.VERIFICATION_INACTIVE
-        employee.save()
-        return redirect('active_employees')
-    else:
-        return HttpResponseNotAllowed(['POST'], 'Method Not Allowed')
+        form = DeactivationLogForm(request.POST, instance=deactivationlog)
+        if form.is_valid():
+
+            form.save()
+            employee.verification = Employee.VERIFICATION_INACTIVE
+            employee.save()
+            return redirect('inactive_employees')
+
+    form = DeactivationLogForm(instance=deactivationlog)
+
+    return render(request, 'employees/deactivate_employee.html', {
+        'form': form,
+        'employee': employee
+    })
+
 
 
 def inactive_employees(request):
@@ -134,4 +146,4 @@ def reactivate_employee(request, id):
     employee = get_object_or_404(Employee, pk=id)
     employee.verification = Employee.VERIFICATION_ACTIVE
     employee.save()
-    return redirect('inactive_employees')  # Redirect to the list of inactive employees or wherever appropriate
+    return redirect('inactive_employees')

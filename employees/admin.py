@@ -4,7 +4,8 @@ from django.utils.html import format_html, urlencode
 from django.urls import reverse
 from django.contrib.contenttypes.admin import GenericTabularInline
 
-from .models import Employee, Department, Position, Employee_information, Internal_permission, External_permission
+from .models import Employee, Department, Position, Employee_information, Internal_permission, External_permission, \
+    DeactivationLog
 
 import datetime
 from django.utils import timezone
@@ -47,6 +48,14 @@ class Employee_informationAdmin(admin.ModelAdmin):
     list_per_page = 10
     search_fields = ['employee__first_name__istartswith', 'employee__last_name__istartswith']
     list_filter = ['city']
+
+@admin.register(DeactivationLog)
+class DeactivationLogAdmin(admin.ModelAdmin):
+    autocomplete_fields = ['employee']
+    list_display = ['employee', 'deactivation_date', 'comments']
+    list_per_page = 10
+    search_fields = ['employee__first_name__istartswith', 'employee__last_name__istartswith', 'comments__istartswith']
+    list_filter = ['deactivation_date']
 
 
 @admin.register(Department)

@@ -118,3 +118,11 @@ class External_permission(models.Model):
         verbose_name_plural = 'External permissions'
         verbose_name = 'External permission'
 
+
+class DeactivationLog(models.Model):
+    employee = models.OneToOneField(Employee, on_delete=models.CASCADE, primary_key=True)
+    deactivation_date = models.DateField(null=True, blank=True)
+    comments = models.TextField(null=True, blank=True)
+
+    def __str__(self):
+        return f'{self.employee.first_name} {self.employee.last_name}'
