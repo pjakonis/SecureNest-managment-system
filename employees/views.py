@@ -125,6 +125,7 @@ def delete(request, pk):
         'form': form,
         'employee': employee
     })
+# Sutvarkyta
 
 
 
