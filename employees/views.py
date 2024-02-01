@@ -3,15 +3,14 @@ from django.shortcuts import render
 from django.urls import reverse
 from django.shortcuts import render, get_object_or_404, redirect
 from django.views.decorators.http import require_POST
+from django.db.models import Q
 
-from .models import Employee, Employee_information, Department, Position, Internal_permission, External_permission, DeactivationLog
+from .models import Employee, Employee_information, Department, Position, Internal_permission, External_permission, \
+    DeactivationLog
+
 from .forms import EmployeeForm, EmployeeInformationForm, DeactivationLogForm
 
-
-# Create your views here.
-def index(request):
-    # Simplify this view to just render the index.html without any specific data if that's your intention
-    return render(request, 'employees/index.html')
+from datetime import date
 
 
 def valid_employees(request):
@@ -20,7 +19,6 @@ def valid_employees(request):
     if order == 'desc':
         sort_by = '-' + sort_by
 
-    # Filter the employees based on your definition of 'valid'
     employees = Employee.objects.filter(verification=Employee.VERIFICATION_ACTIVE).prefetch_related(
         'employee_information').order_by(sort_by)
 
@@ -32,6 +30,7 @@ def valid_employees(request):
 def view_employee(request, id):
     employee = get_object_or_404(Employee, pk=id)
     employee_information = get_object_or_404(Employee_information, employee=employee)
+    deactivationlog = get_object_or_404(DeactivationLog, employee=employee)
     department = employee.department
     position = employee.position
 
@@ -39,7 +38,8 @@ def view_employee(request, id):
         'employee': employee,
         'employee_information': employee_information,
         'department': department,
-        'position': position
+        'position': position,
+        'deactivationlog': deactivationlog
     }
     return render(request, 'employees/view_employees.html', context)
 
@@ -113,7 +113,6 @@ def delete(request, pk):
     if request.method == 'POST':
         form = DeactivationLogForm(request.POST, instance=deactivationlog)
         if form.is_valid():
-
             form.save()
             employee.verification = Employee.VERIFICATION_INACTIVE
             employee.save()
@@ -125,8 +124,6 @@ def delete(request, pk):
         'form': form,
         'employee': employee
     })
-# Sutvarkyta
-
 
 
 def inactive_employees(request):
@@ -148,3 +145,15 @@ def reactivate_employee(request, id):
     employee.verification = Employee.VERIFICATION_ACTIVE
     employee.save()
     return redirect('inactive_employees')
+
+
+def index(request):
+    today = date.today()
+    employees_birthday_this_month = Employee_information.objects.filter(
+        date_of_birth__month=today.month
+    ).select_related('employee').order_by('date_of_birth__day')
+
+    # Pass the employees to the template
+    return render(request, 'employees/index.html', {
+        'employees_birthday_this_month': employees_birthday_this_month
+    })

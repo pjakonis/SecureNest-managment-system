@@ -18,8 +18,8 @@
         <form action="" method="POST">
           {% csrf_token %}
           {{ form }}
-          <button type="submit" class="btn btn-primary">Make Inactive</button>
-          <a href="{% url 'active_employees' %}" class="btn btn-secondary">Cancel</a>
+          <button type="submit" class="btn btn-primary mt-3">Make Inactive</button>
+          <a href="{% url 'active_employees' %}" class="btn btn-secondary mt-3">Cancel</a>
         </form>
       </div>
     </div>

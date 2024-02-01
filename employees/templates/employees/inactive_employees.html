@@ -6,8 +6,8 @@
     {% if employees %}
     <div class="card bg-light ms-4 me-4 mb-4">
       <div class="card-header d-flex justify-content-between align-items-center">
-        <div>
-          <i class="fa-solid fa-list fa-lg"></i> Inactive Employees
+        <div style="color: #d82c34;">
+          <i class="fa-solid fa-user-large-slash fg-lg"></i> Inactive Employees
         </div>
       </div>
       <div class="card-body">
@@ -16,22 +16,11 @@
             <thead>
 
             <tr>
-              <th scope="col"><a
-                      href="?sort=first_name&order={% if request.GET.sort == 'first_name' and request.GET.order == 'asc' %}desc{% else %}asc{% endif %}">First
-                Name</a></th>
-              <th scope="col"><a
-                      href="?sort=last_name&order={% if request.GET.sort == 'last_name' and request.GET.order == 'asc' %}desc{% else %}asc{% endif %}">Last
-                Name</a></th>
-              <th scope="col"><a
-                      href="?sort=department&order={% if request.GET.sort == 'department' and request.GET.order == 'asc' %}desc{% else %}asc{% endif %}">Department</a>
-              </th>
-              <th scope="col"><a
-                      href="?sort=position&order={% if request.GET.sort == 'position' and request.GET.order == 'asc' %}desc{% else %}asc{% endif %}">Position</a>
-              </th>
-              <th scope="col"><a
-                        href="?sort=last_deactivation_date&order={% if request.GET.sort == 'last_deactivation_date' and request.GET.order == 'asc' %}desc{% else %}asc{% endif %}">
-                    Deactivation Date</a></th>
-              </th>
+              <th scope="col"><a href="?sort=first_name&order={% if request.GET.sort == 'first_name' and request.GET.order == 'asc' %}desc{% else %}asc{% endif %}">First Name</a></th>
+              <th scope="col"><a href="?sort=last_name&order={% if request.GET.sort == 'last_name' and request.GET.order == 'asc' %}desc{% else %}asc{% endif %}">Last Name</a></th>
+              <th scope="col"><a href="?sort=department&order={% if request.GET.sort == 'department' and request.GET.order == 'asc' %}desc{% else %}asc{% endif %}">Department</a></th>
+              <th scope="col"><a href="?sort=position&order={% if request.GET.sort == 'position' and request.GET.order == 'asc' %}desc{% else %}asc{% endif %}">Position</a></th>
+              <th scope="col"><a href="?sort=deactivationlog&order={% if request.GET.sort == 'deactivationlog' and request.GET.order == 'asc' %}desc{% else %}asc{% endif %}">Deactivation Date</a></th>
               <th scope="col">Actions</th>
             </tr>
             </thead>
@@ -42,7 +31,7 @@
               <td>{{ employee.last_name }}</td>
               <td>{{ employee.department }}</td>
               <td>{{ employee.position }}</td>
-              <td>{{ employee.last_deactivation_date }}</td>
+              <td>{{ employee.deactivationlog.deactivation_date }}</td>
 
               <td>
                 <button type="button" class="btn btn-info me-1" data-bs-toggle="modal"
@@ -62,6 +51,10 @@
                       <div class="modal-body">
                         <table class="table">
                           <tbody>
+                          <tr class="table-danger">
+                            <th scope="row">Reason of termination</th>
+                            <td class="text-wrap" style="max-width: 200px;">{{ employee.deactivationlog.comments }}</td>
+                          </tr>
                           <tr>
                             <th scope="row">Department</th>
                             <td>{{ employee.department }}</td>

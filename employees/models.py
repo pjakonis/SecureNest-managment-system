@@ -1,5 +1,6 @@
 from django.db import models
 from django.core.validators import MinValueValidator
+from datetime import date
 
 
 class Employee(models.Model):
@@ -45,6 +46,10 @@ class Employee_information(models.Model):
     class Meta:
         ordering = ['employee__first_name']
         verbose_name_plural = 'Employee information'
+
+    def is_birthday_today(self):
+        return self.date_of_birth.month == date.today().month and \
+            self.date_of_birth.day == date.today().day
 
 
 class Department(models.Model):

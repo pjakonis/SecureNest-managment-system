@@ -1,13 +1,41 @@
 {% extends 'employees/base.html' %}
 
 {% block body %}
-<div class="row mt-5">
-  HOME PAGE
+<div class="container mt-4">
+  <div class="row">
+    <div class="col-md-6">
+      {% if employees_birthday_this_month %}
+      <div class="card bg-light">
+        <div class="card-header">
+          <div>
+            <i class="fa-solid fa-cake-candles" style="color: #d82c34;"></i> Employees with birthdays this month
+          </div>
+        </div>
+        <div class="card-body">
+          <div class="table-responsive">
+            <table class="table table-hover">
+              <thead>
+              <tr>
+                <th>Name</th>
+                <th>Date of Birth</th>
+              </tr>
+              </thead>
+              <tbody>
+              {% for employee_info in employees_birthday_this_month %}
+              <tr>
+                <td>{{ employee_info.employee.first_name }} {{ employee_info.employee.last_name }}</td>
+                <td>{{ employee_info.date_of_birth }}</td>
+              </tr>
+              {% endfor %}
+              </tbody>
+            </table>
+            {% else %}
+            <p>No birthdays this month.</p>
+            {% endif %}
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
 </div>
-{% endblock %}
-
-
-
-
-
-
+  {% endblock %}
