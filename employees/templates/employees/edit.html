@@ -15,7 +15,7 @@
         <i class="fa-solid fa-pen-to-square fa-lg"></i> Update employee: {{ employee.first_name }} {{ employee.last_name }}
       </div>
       <div class="card-body">
-        <form action="" method="POST">
+        <form method="POST" action="" enctype="multipart/form-data">
           {% csrf_token %}
           {{ form.as_p }}
           {{ info_form.as_p }}

@@ -47,7 +47,6 @@ class Employee_informationAdmin(admin.ModelAdmin):
     list_display = ['employee']
     list_per_page = 10
     search_fields = ['employee__first_name__istartswith', 'employee__last_name__istartswith']
-    list_filter = ['city']
 
 @admin.register(DeactivationLog)
 class DeactivationLogAdmin(admin.ModelAdmin):
@@ -121,7 +120,10 @@ class Internal_permissionAdmin(admin.ModelAdmin):
 
     @admin.display(ordering='permit_expiry_date')
     def expires_in(self, internal_permission):
-        today = datetime.date.today()
+        if internal_permission.permit_expiry_date is None:
+            return 'No permit set'
+
+        today = timezone.now().date()
         days_until_expiry = (internal_permission.permit_expiry_date - today).days
 
         if internal_permission.permit_expiry_date < today:
@@ -136,12 +138,12 @@ class Internal_permissionAdmin(admin.ModelAdmin):
             return 'Expires in less than 2 weeks'
         elif days_until_expiry <= 7 and days_until_expiry >= 2:
             return f'{days_until_expiry} days'
-        elif days_until_expiry <= 2 and days_until_expiry >= 1:
-            return f'{days_until_expiry} day left'
-        elif days_until_expiry <= 1 and days_until_expiry >= 0:
-            return f'{days_until_expiry} days left'
+        elif days_until_expiry == 1:
+            return '1 day left'
+        elif days_until_expiry == 0:
+            return 'Expires today'
         else:
-            return f'Valid'
+            return 'Valid'
 
 
 @admin.register(External_permission)
@@ -155,7 +157,10 @@ class External_permissionAdmin(admin.ModelAdmin):
 
     @admin.display(ordering='permit_expiry_date')
     def expires_in(self, external_permission):
-        today = datetime.date.today()
+        if external_permission.permit_expiry_date is None:
+            return 'No permit set'
+
+        today = timezone.now().date()
         days_until_expiry = (external_permission.permit_expiry_date - today).days
 
         if external_permission.permit_expiry_date < today:
@@ -170,9 +175,9 @@ class External_permissionAdmin(admin.ModelAdmin):
             return 'Expires in less than 2 weeks'
         elif days_until_expiry <= 7 and days_until_expiry >= 2:
             return f'{days_until_expiry} days'
-        elif days_until_expiry <= 2 and days_until_expiry >= 1:
-            return f'{days_until_expiry} day left'
-        elif days_until_expiry <= 1 and days_until_expiry >= 0:
-            return f'{days_until_expiry} days left'
+        elif days_until_expiry == 1:
+            return '1 day left'
+        elif days_until_expiry == 0:
+            return 'Expires today'
         else:
-            return f'Valid'
+            return 'Valid'

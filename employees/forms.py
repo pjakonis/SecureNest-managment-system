@@ -1,5 +1,6 @@
 from django import forms
-from .models import Employee, Employee_information, Department, Position, Internal_permission, External_permission, DeactivationLog
+from .models import Employee, Employee_information, Department, Position, Internal_permission, External_permission, \
+    DeactivationLog
 
 
 class EmployeeForm(forms.ModelForm):
@@ -13,6 +14,7 @@ class EmployeeForm(forms.ModelForm):
             'department': 'Department',
             'position': 'Position',
             'verification': 'Verification',
+            'attachment': 'Attachment',
         }
         widgets = {
             'first_name': forms.TextInput(attrs={'class': 'form-control'}),
@@ -21,6 +23,7 @@ class EmployeeForm(forms.ModelForm):
             'department': forms.Select(attrs={'class': 'form-control'}),
             'position': forms.Select(attrs={'class': 'form-control'}),
             'verification': forms.HiddenInput(),
+            'attachment': forms.FileInput(attrs={'class': 'form-control'}),
         }
 
 
@@ -32,20 +35,14 @@ class EmployeeInformationForm(forms.ModelForm):
             'date_of_birth': 'Date of Birth',
             'email': 'Email',
             'phone_number': 'Phone Number',
-            'street': 'Street',
-            'city': 'City',
-            'zip_code': 'Zip Code',
-            'country': 'Country',
+            'address': 'Address',
         }
         widgets = {
             'employee': forms.HiddenInput(),
             'date_of_birth': forms.DateInput(attrs={'class': 'form-control', 'type': 'date'}, format='%Y-%m-%d'),
             'email': forms.EmailInput(attrs={'class': 'form-control'}),
             'phone_number': forms.TextInput(attrs={'class': 'form-control'}),
-            'street': forms.TextInput(attrs={'class': 'form-control'}),
-            'city': forms.TextInput(attrs={'class': 'form-control'}),
-            'zip_code': forms.TextInput(attrs={'class': 'form-control'}),
-            'country': forms.TextInput(attrs={'class': 'form-control'}),
+            'address': forms.TextInput(attrs={'class': 'form-control'}),
         }
 
 
@@ -62,4 +59,48 @@ class DeactivationLogForm(forms.ModelForm):
             'employee': forms.HiddenInput(),
             'deactivation_date': forms.DateInput(attrs={'class': 'form-control', 'type': 'date'}, format='%Y-%m-%d'),
             'comments': forms.Textarea(attrs={'class': 'form-control'}),
+        }
+
+
+class InternalPermissionForm(forms.ModelForm):
+    class Meta:
+        model = Internal_permission
+        fields = '__all__'
+        labels = {
+            'employee': 'Employee',
+            'permit_number': 'Permit Number',
+            'permit_issue_date': 'Permit Issue Date',
+            'permit_expiry_date': 'Permit Expiry Date',
+            'description': 'Description',
+            'tag': 'Tag',
+            'attachment': 'Attachment',
+        }
+        widgets = {
+            'employee': forms.HiddenInput(),
+            'permit_number': forms.TextInput(attrs={'class': 'form-control'}),
+            'permit_issue_date': forms.DateInput(attrs={'class': 'form-control', 'type': 'date'}, format='%Y-%m-%d'),
+            'permit_expiry_date': forms.DateInput(attrs={'class': 'form-control', 'type': 'date'}, format='%Y-%m-%d'),
+            'description': forms.Textarea(attrs={'class': 'form-control'}),
+            'tag': forms.Select(attrs={'class': 'form-control'}),
+            'attachment': forms.FileInput(attrs={'class': 'form-control'}),
+        }
+
+
+class ExternalPermissionForm(forms.ModelForm):
+    class Meta:
+        model = External_permission
+        fields = '__all__'
+        labels = {
+            'employee': 'Employee',
+            'permit_number': 'Permit Number',
+            'permit_issue_date': 'Permit Issue Date',
+            'permit_expiry_date': 'Permit Expiry Date',
+            'attachment': 'Attachment',
+        }
+        widgets = {
+            'employee': forms.HiddenInput(),
+            'permit_number': forms.TextInput(attrs={'class': 'form-control'}),
+            'permit_issue_date': forms.DateInput(attrs={'class': 'form-control', 'type': 'date'}, format='%Y-%m-%d'),
+            'permit_expiry_date': forms.DateInput(attrs={'class': 'form-control', 'type': 'date'}, format='%Y-%m-%d'),
+            'attachment': forms.FileInput(attrs={'class': 'form-control'}),
         }

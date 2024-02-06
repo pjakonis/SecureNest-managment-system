@@ -1,5 +1,7 @@
 {% extends 'employees/base.html' %}
 
+{% load custom_filters %}
+
 {% block body %}
 <div class="row mt-5">
   <div class="col-12">
@@ -13,22 +15,42 @@
       </div>
       <div class="card-body">
         <div class="table-responsive">
+          <form method="get" action=".">
+            <div class="input-group mb-3">
+              {% if request.GET.q %}
+              <a href="{% url 'active_employees' %}" class="btn btn-outline-secondary"><i class="fa fa-times"></i></a>
+              {% endif %}
+              <input type="text" class="form-control" placeholder="Search for employee or department..." name="q"
+                     value="{{ request.GET.q }}">
+              <button class="btn btn-outline-secondary" type="submit"><i class="fa fa-search"></i> Search</button>
+            </div>
+
+          </form>
           <table class="table table-hover">
             <thead>
             <tr>
-              <th scope="col"><a
-                      href="?sort=first_name&order={% if request.GET.sort == 'first_name' and request.GET.order == 'asc' %}desc{% else %}asc{% endif %}">First
-                Name</a></th>
-              <th scope="col"><a
-                      href="?sort=last_name&order={% if request.GET.sort == 'last_name' and request.GET.order == 'asc' %}desc{% else %}asc{% endif %}">Last
-                Name</a></th>
-              <th scope="col"><a
-                      href="?sort=department&order={% if request.GET.sort == 'department' and request.GET.order == 'asc' %}desc{% else %}asc{% endif %}">Department</a>
+              <th scope="col">
+                <a href="?sort=first_name&order={% if request.GET.sort == 'first_name' and request.GET.order == 'asc' %}desc{% else %}asc{% endif %}{% if request.GET.q %}&q={{ request.GET.q }}{% endif %}">
+                  First Name
+                </a>
               </th>
-              <th scope="col"><a
-                      href="?sort=position&order={% if request.GET.sort == 'position' and request.GET.order == 'asc' %}desc{% else %}asc{% endif %}">Position</a>
+              <th scope="col">
+                <a href="?sort=last_name&order={% if request.GET.sort == 'last_name' and request.GET.order == 'asc' %}desc{% else %}asc{% endif %}{% if request.GET.q %}&q={{ request.GET.q }}{% endif %}">
+                  Last Name
+                </a>
               </th>
-              <th scope="col">Actions</th>
+              <th scope="col">
+                <a href="?sort=department__name&order={% if request.GET.sort == 'department__name' and request.GET.order == 'asc' %}desc{% else %}asc{% endif %}{% if request.GET.q %}&q={{ request.GET.q }}{% endif %}">
+                  Department
+                </a>
+              </th>
+
+              <th scope="col">
+                <a href="?sort=position__name&order={% if request.GET.sort == 'position__name' and request.GET.order == 'asc' %}desc{% else %}asc{% endif %}{% if request.GET.q %}&q={{ request.GET.q }}{% endif %}">
+                  Position
+                </a>
+              </th>
+              <th scope="col" style="width: 150px;"></th>
             </tr>
             </thead>
             <tbody>
@@ -79,61 +101,158 @@
                           </tr>
                           <tr>
                             <th scope="row">Address</th>
-                            <td>{{ employee.employee_information.street }}</td>
+                            <td>{{ employee.employee_information.address }}</td>
                           </tr>
                           <tr>
-                            <th scope="row">City</th>
-                            <td>{{ employee.employee_information.city }}</td>
-                          </tr>
-                          <tr>
-                            <th scope="row">ZIP code</th>
-                            <td>{{ employee.employee_information.zip_code }}</td>
-                          </tr>
-                          <tr>
-                            <th scope="row">Country</th>
-                            <td>{{ employee.employee_information.country }}</td>
+                            <th scope="row">File</th>
+                            <td>
+                              {% if employee.attachment %}
+                              <a href="{{ employee.attachment.url }}" target="_blank">
+                                {{ employee.attachment.name|filename }}</a>
+                              {% else %}
+                              No file attached
+                              {% endif %}
+                            </td>
                           </tr>
                           </tbody>
                         </table>
                       </div>
                       <div class="modal-footer">
-                        <button type="button" class="btn btn-primary" data-bs-dismiss="modal">Close</button>
+                        <a class="btn btn-warning me-1" href="{% url 'edit_employee' employee.id %}">
+                          <i class="fa-solid fa-user-pen fa-lg"></i> Update
+                        </a>
+                        <button type="button" class="btn btn-danger" data-bs-toggle="modal"
+                                data-bs-target="#deleteModal{{employee.id}}">
+                          <i class="fa-solid fa-user-minus fa-lg"></i> Deactivate
+                        </button>
+
+                        <div class="modal" id="deleteModal{{employee.id}}" tabindex="-1" aria-labelledby="modalLabel2"
+                             aria-hidden="true">
+                          <div class="modal-dialog modal-dialog-centered" role="document">
+                            <div class="modal-content">
+                              <div class="modal-header">
+                                <h5 class="modal-title">
+                                  {{ employee.first_name }} {{ employee.last_name }}
+                                </h5>
+                                <button type="button" class="btn-close" data-bs-dismiss="modal"
+                                        aria-label="Close"></button>
+                              </div>
+                              <div class="modal-body">
+                                <p>Are you sure you want to deactivate {{ employee.first_name }}
+                                  {{ employee.last_name }}?</p>
+                              </div>
+                              <div class="modal-footer">
+                                <form action="{% url 'delete' employee.id %}" method="POST">
+                                  {% csrf_token %}
+                                  <input type="submit" class="btn btn-danger" value="Make Inactive">
+                                  <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel
+                                  </button>
+                                </form>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+
                       </div>
                     </div>
                   </div>
                 </div>
-
-                <a class="btn btn-warning me-1" href="{% url 'edit_employee' employee.id %}">
-                  <i class="fa-solid fa-user-pen fa-lg"></i>
-                </a>
-                <button type="button" class="btn btn-danger" data-bs-toggle="modal"
-                        data-bs-target="#deleteModal{{employee.id}}">
-                  <i class="fa-solid fa-user-minus fa-lg"></i>
+                <button type="button" class="btn btn-warning me-1" data-bs-toggle="modal"
+                        data-bs-target="#permissionsModal{{employee.id}}">
+                  <i class="fa-regular fa-id-badge fa-lg"></i>
                 </button>
-
-                <div class="modal" id="deleteModal{{employee.id}}" tabindex="-1" aria-labelledby="modalLabel2"
-                     aria-hidden="true">
-                  <div class="modal-dialog" role="document">
+                <!-- Permissions Modal -->
+                <div class="modal fade" id="permissionsModal{{employee.id}}" tabindex="-1"
+                     aria-labelledby="permissionsModalLabel{{employee.id}}" aria-hidden="true">
+                  <div class="modal-dialog modal-dialog-centered modal-lg">
                     <div class="modal-content">
                       <div class="modal-header">
-                        <h5 class="modal-title">
-                          {{ employee.first_name }} {{ employee.last_name }}
-                        </h5>
+                        <h5 class="modal-title" id="permissionsModalLabel{{employee.id}}">{{ employee.first_name }}
+                          {{ employee.last_name }} - Permissions</h5>
                         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                       </div>
                       <div class="modal-body">
-                        <p>Are you sure you want to deactivate {{ employee.first_name }} {{ employee.last_name }}?</p>
+                        <h6>Internal Permissions</h6>
+                        <table class="table">
+                          <thead>
+                          <tr class="table-active">
+                            <th>Permit Number</th>
+                            <th>Permit Issue Date</th>
+                            <th>Permit Expiration Date</th>
+                            <th>Description</th>
+                            <th>Tag</th>
+                            <th>File</th>
+                            <th>Actions</th>
+                          </tr>
+                          </thead>
+                          <tbody>
+                          {% for permission in employee.internal_permission_set.all %}
+                          <tr>
+                            <td>{{ permission.permit_number }}</td>
+                            <td>{{ permission.permit_issue_date }}</td>
+                            <td>{{ permission.permit_expiry_date }}</td>
+                            <td>{{ permission.description }}</td>
+                            <td>{{ permission.tag }}</td>
+                            <td>
+                              {% if permission.attachment %}
+                              <a href="{{ permission.attachment.url }}" target="_blank"><i
+                                      class="fa-regular fa-file fa-lg"></i></a>
+                              {% else %}
+                              <i class="fa-solid fa-file-excel fa-lg"></i>
+                              {% endif %}
+                            </td>
+                            <td>
+                              <a href="{% url 'edit_internal_permission' permission.id %}"
+                                 class="btn btn-primary btn-sm"><i class="fa-solid fa-pen-to-square"></i></a>
+                            </td>
+                          </tr>
+                          {% endfor %}
+                          </tbody>
+                        </table>
+                        <h6>External Permissions</h6>
+                        <table class="table">
+                          <thead>
+                          <tr class="table-active">
+                            <th>Permit Number</th>
+                            <th>Permit Issue Date</th>
+                            <th>Permit Expiration Date</th>
+                            <th>File</th>
+                            <th>Actions</th>
+                          </tr>
+                          </thead>
+                          <tbody>
+                          {% for permission in employee.external_permission_set.all %}
+                          <tr>
+                            <td>{{ permission.permit_number }}</td>
+                            <td>{{ permission.permit_issue_date }}</td>
+                            <td>{{ permission.permit_expiry_date }}</td>
+                            <td>
+                              {% if permission.attachment %}
+                              <a href="{{ permission.attachment.url }}" target="_blank"><i
+                                      class="fa-regular fa-file fa-lg"></i></a>
+                              {% else %}
+                              <i class="fa-solid fa-file-excel fa-lg"></i>
+                              {% endif %}
+                            </td>
+                            <td>
+                              <a href="{% url 'edit_external_permission' permission.id %}"
+                                 class="btn btn-primary btn-sm"><i class="fa-solid fa-pen-to-square"></i></a>
+                            </td>
+                          </tr>
+                          {% endfor %}
+                          </tbody>
+                        </table>
                       </div>
                       <div class="modal-footer">
-                        <form action="{% url 'delete' employee.id %}" method="POST">
-                          {% csrf_token %}
-                          <input type="submit" class="btn btn-danger" value="Make Inactive">
-                          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
-                        </form>
+                        <a href="{% url 'add_internal_permission' employee.id %}" class="btn btn-success">Add Internal
+                          Permission</a>
+                        <a href="{% url 'add_external_permission' employee.id %}" class="btn btn-info">Add External
+                          Permission</a>
                       </div>
                     </div>
                   </div>
                 </div>
+
               </td>
             </tr>
             {% endfor %}
@@ -143,7 +262,41 @@
       </div>
     </div>
     {% else %}
-    <h5 class="alert alter-primary ms-4 me-4 mb-4">No Employees Found</h5>
+    <div class="card bg-light ms-4 me-4 mb-4">
+      <div class="card-header d-flex justify-content-between align-items-center">
+        <div style="color: #37b281;">
+          <i class="fa-regular fa-square-check fa-lg" style="color: #37b281;"></i></i> Active Employees
+        </div>
+      </div>
+      <div class="card-body">
+        <div class="table-responsive">
+          <form method="get" action=".">
+            <div class="input-group mb-3">
+              {% if request.GET.q %}
+              <a href="{% url 'active_employees' %}" class="btn btn-outline-secondary"><i class="fa fa-times"></i></a>
+              {% endif %}
+              <input type="text" class="form-control" placeholder="Search for employee or department..." name="q"
+                     value="{{ request.GET.q }}">
+              <button class="btn btn-outline-secondary" type="submit"><i class="fa fa-search"></i> Search</button>
+            </div>
+          </form>
+          <table class="table table-hover">
+            <thead>
+            <tr>
+              <th scope="col"><a>First Name</a></th>
+              <th scope="col"><a>Last Name</a></th>
+              <th scope="col"><a>Department</a></th>
+              <th scope="col"><a>Position</a></th>
+              <th scope="col">Actions</th>
+            </tr>
+            </thead>
+          </table>
+          <div class="text-center">
+            <h6>No employees found</h6>
+          </div>
+        </div>
+      </div>
+    </div>
     {% endif %}
   </div>
 </div>

@@ -20,6 +20,7 @@ class Employee(models.Model):
     department = models.ForeignKey('Department', on_delete=models.CASCADE)
     position = models.ForeignKey('Position', on_delete=models.CASCADE)
     verification = models.CharField(max_length=1, choices=VERIFICATION_CHOICES, default=VERIFICATION_ACTIVE)
+    attachment = models.FileField(upload_to='employees/', null=True, blank=True)
 
     def __str__(self):
         return f'{self.first_name} {self.last_name}'
@@ -35,10 +36,7 @@ class Employee_information(models.Model):
     date_of_birth = models.DateField(null=True, blank=True)
     email = models.EmailField(unique=True, null=True, blank=True)
     phone_number = models.CharField(max_length=30, unique=True, null=True, blank=True, default=None)
-    street = models.CharField(max_length=255, null=True, blank=True)
-    city = models.CharField(max_length=50, null=True, blank=True)
-    zip_code = models.CharField(max_length=10, null=True, blank=True)
-    country = models.CharField(max_length=50, null=True, blank=True)
+    address = models.CharField(max_length=255, null=True, blank=True)
 
     def __str__(self):
         return f'{self.employee.first_name} {self.employee.last_name}'
@@ -99,6 +97,7 @@ class Internal_permission(models.Model):
     permit_expiry_date = models.DateField(null=True, blank=True)
     description = models.TextField(max_length=255, null=True, blank=True)
     tag = models.CharField(max_length=2, choices=TAG_CHOICES, default=TAG_REJECTED)
+    attachment = models.FileField(upload_to='internal_permissions/', null=True, blank=True)
 
     def __str__(self):
         return f'{self.employee.first_name} {self.employee.last_name} {self.permit_number}'
@@ -114,6 +113,7 @@ class External_permission(models.Model):
     permit_number = models.CharField(max_length=10, unique=True, null=True, blank=True)
     permit_issue_date = models.DateField(null=True, blank=True)
     permit_expiry_date = models.DateField(null=True, blank=True)
+    attachment = models.FileField(upload_to='external_permissions/', null=True, blank=True)
 
     def __str__(self):
         return f'{self.employee.first_name} {self.employee.last_name} {self.permit_number}'
