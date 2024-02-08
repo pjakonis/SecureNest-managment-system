@@ -3,6 +3,7 @@ from django.conf import settings
 from django.conf.urls.static import static
 
 from . import views
+from .views import delete_external_permission, delete_internal_permission
 
 urlpatterns = [
                   path('', views.index, name='index'),
@@ -23,5 +24,8 @@ urlpatterns = [
                        name='edit_external_permission'),
                   path('employee/<int:pk>/delete_permanently/', views.delete_employee_permanently,
                        name='delete_employee_permanently'),
-
+                  path('delete_internal_permission/<int:permission_id>/', delete_internal_permission,
+                       name='delete_internal_permission'),
+                  path('delete_external_permission/<int:permission_id>/', delete_external_permission,
+                       name='delete_external_permission'),
               ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

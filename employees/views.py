@@ -252,3 +252,19 @@ def delete_employee_permanently(request, pk):
     employee.delete()
     messages.success(request, f"The employee {employee.first_name} {employee.last_name} has been deleted permanently.")
     return redirect('inactive_employees')
+
+
+@require_POST
+def delete_internal_permission(request, permission_id):
+    permission = get_object_or_404(Internal_permission, pk=permission_id)
+    permission.delete()
+    messages.success(request, 'Internal permission deleted successfully.')
+    return redirect('active_employees')
+
+
+@require_POST
+def delete_external_permission(request, permission_id):
+    permission = get_object_or_404(External_permission, pk=permission_id)
+    permission.delete()
+    messages.success(request, 'External permission deleted successfully.')
+    return redirect('active_employees')
