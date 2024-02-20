@@ -5,6 +5,7 @@ from django.shortcuts import render, get_object_or_404, redirect
 from django.views.decorators.http import require_POST
 from django.contrib import messages
 from django.db.models import Q
+from django.contrib.auth.decorators import login_required
 
 from .models import Employee, Employee_information, Department, Position, Internal_permission, External_permission, \
     DeactivationLog
@@ -14,7 +15,11 @@ from .forms import EmployeeForm, EmployeeInformationForm, DeactivationLogForm, I
 
 from datetime import date
 
+from django.contrib.auth.views import PasswordResetConfirmView
+from django.urls import reverse_lazy
 
+
+@login_required
 def valid_employees(request):
     search_query = request.GET.get('q', '').strip()
     sort_by = request.GET.get('sort', 'first_name')
@@ -42,6 +47,7 @@ def valid_employees(request):
     })
 
 
+@login_required
 def inactive_employees(request):
     search_query = request.GET.get('q', '').strip()
     sort_by = request.GET.get('sort', 'id')
@@ -67,6 +73,7 @@ def inactive_employees(request):
     })
 
 
+@login_required
 def view_employee(request, id):
     employee = get_object_or_404(Employee, pk=id)
     employee_information = get_object_or_404(Employee_information, employee=employee)
@@ -84,6 +91,7 @@ def view_employee(request, id):
     return render(request, 'employees/view_employees.html', context)
 
 
+@login_required
 def add_employee(request):
     if request.method == 'POST':
         form = EmployeeForm(request.POST, request.FILES)
@@ -104,6 +112,7 @@ def add_employee(request):
         })
 
 
+@login_required
 def add_employee_information(request):
     if request.method == 'POST':
         form = EmployeeInformationForm(request.POST)
@@ -124,6 +133,7 @@ def add_employee_information(request):
         })
 
 
+@login_required
 def edit_employee(request, pk):
     employee = get_object_or_404(Employee, pk=pk)
     employee_information = get_object_or_404(Employee_information, employee=employee)
@@ -146,6 +156,7 @@ def edit_employee(request, pk):
     })
 
 
+@login_required
 def delete(request, pk):
     employee = get_object_or_404(Employee, pk=pk)
     deactivationlog = get_object_or_404(DeactivationLog, employee=employee)
@@ -166,6 +177,7 @@ def delete(request, pk):
     })
 
 
+@login_required
 @require_POST
 def reactivate_employee(request, id):
     employee = get_object_or_404(Employee, pk=id)
@@ -174,6 +186,7 @@ def reactivate_employee(request, id):
     return redirect('inactive_employees')
 
 
+@login_required
 def index(request):
     today = date.today()
     employees_birthday_this_month = Employee_information.objects.filter(
@@ -186,6 +199,7 @@ def index(request):
     })
 
 
+@login_required
 def add_internal_permission(request, employee_id):
     employee = get_object_or_404(Employee, pk=employee_id)
     if request.method == 'POST':
@@ -204,6 +218,7 @@ def add_internal_permission(request, employee_id):
     })
 
 
+@login_required
 def add_external_permission(request, employee_id):
     employee = get_object_or_404(Employee, pk=employee_id)
     if request.method == 'POST':
@@ -220,6 +235,7 @@ def add_external_permission(request, employee_id):
     })
 
 
+@login_required
 def edit_internal_permission(request, permission_id):
     permission = get_object_or_404(Internal_permission, pk=permission_id)
     if request.method == 'POST':
@@ -233,6 +249,7 @@ def edit_internal_permission(request, permission_id):
     return render(request, 'employees/internal_permission_edit_template.html', {'form': form})
 
 
+@login_required
 def edit_external_permission(request, permission_id):
     permission = get_object_or_404(External_permission, pk=permission_id)
     if request.method == 'POST':
@@ -262,9 +279,25 @@ def delete_internal_permission(request, permission_id):
     return redirect('active_employees')
 
 
+@login_required
 @require_POST
 def delete_external_permission(request, permission_id):
     permission = get_object_or_404(External_permission, pk=permission_id)
     permission.delete()
     messages.success(request, 'External permission deleted successfully.')
     return redirect('active_employees')
+
+
+class CustomPasswordResetConfirmView(PasswordResetConfirmView):
+    template_name = 'registration/password_reset_confirm.html'
+    template_name_invalid = 'registration/password_reset_confirm_invalid.html'
+    success_url = reverse_lazy('password_reset_complete')
+
+    def get_template_names(self):
+        """
+        Return the template name to be used for the request.
+        If the token is invalid, use `template_name_invalid`.
+        """
+        if not self.validlink:
+            return [self.template_name_invalid]
+        return [self.template_name]

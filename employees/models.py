@@ -1,6 +1,8 @@
 from django.db import models
 from django.core.validators import MinValueValidator
 from datetime import date
+from django.utils.translation import gettext_lazy as _
+from PIL import Image
 
 
 class Employee(models.Model):
@@ -16,6 +18,7 @@ class Employee(models.Model):
 
     first_name = models.CharField(max_length=25)
     last_name = models.CharField(max_length=50)
+    photo = models.ImageField(upload_to='employee_photos/', default='default_photo.jpg', blank=True, null=True)
     hire_date = models.DateField(default=None, null=True)
     department = models.ForeignKey('Department', on_delete=models.CASCADE)
     position = models.ForeignKey('Position', on_delete=models.CASCADE)
@@ -29,6 +32,26 @@ class Employee(models.Model):
         ordering = ['first_name']
         verbose_name_plural = 'Employees'
         verbose_name = 'Employee'
+
+    def save(self, *args, **kwargs):
+        super().save(*args, **kwargs)
+
+        if self.photo:
+            img = Image.open(self.photo.path)
+
+            # Using Image.Resampling.LANCZOS for high-quality downsampling
+            img.thumbnail((300, 300), Image.Resampling.LANCZOS)
+
+            # Check if the image needs to be cropped to 300x300
+            img_width, img_height = img.size
+            if img_width > 300 or img_height > 300:
+                left = (img_width - 300) / 2
+                top = (img_height - 300) / 2
+                right = (img_width + 300) / 2
+                bottom = (img_height + 300) / 2
+                img = img.crop((left, top, right, bottom))
+
+            img.save(self.photo.path)
 
 
 class Employee_information(models.Model):

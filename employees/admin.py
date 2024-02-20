@@ -11,7 +11,7 @@ import datetime
 from django.utils import timezone
 from datetime import timedelta
 
-admin.site.site_header = 'EMS Admin'
+admin.site.site_header = 'SecureNest Admin'
 
 
 class EmployeeInformationInline(admin.StackedInline):

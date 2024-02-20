@@ -10,6 +10,7 @@ class EmployeeForm(forms.ModelForm):
         labels = {
             'first_name': 'First Name',
             'last_name': 'Last Name',
+            'photo': 'Employee Photo',
             'hire_date': 'Hire Date',
             'department': 'Department',
             'position': 'Position',
@@ -19,6 +20,7 @@ class EmployeeForm(forms.ModelForm):
         widgets = {
             'first_name': forms.TextInput(attrs={'class': 'form-control'}),
             'last_name': forms.TextInput(attrs={'class': 'form-control'}),
+            'photo': forms.FileInput(attrs={'class': 'form-control'}),
             'hire_date': forms.DateInput(attrs={'class': 'form-control', 'type': 'date'}, format='%Y-%m-%d'),
             'department': forms.Select(attrs={'class': 'form-control'}),
             'position': forms.Select(attrs={'class': 'form-control'}),
@@ -104,3 +106,4 @@ class ExternalPermissionForm(forms.ModelForm):
             'permit_expiry_date': forms.DateInput(attrs={'class': 'form-control', 'type': 'date'}, format='%Y-%m-%d'),
             'attachment': forms.FileInput(attrs={'class': 'form-control'}),
         }
+

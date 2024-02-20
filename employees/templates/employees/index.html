@@ -16,6 +16,7 @@
             <table class="table table-hover">
               <thead>
               <tr>
+                <th></th>
                 <th>Name</th>
                 <th>Date of Birth</th>
               </tr>
@@ -23,8 +24,14 @@
               <tbody>
               {% for employee_info in employees_birthday_this_month %}
               <tr>
-                <td>{{ employee_info.employee.first_name }} {{ employee_info.employee.last_name }}</td>
-                <td>{{ employee_info.date_of_birth }}</td>
+                <td class="align-middle text-center">
+                  <!-- Corrected from {{ employee.photo.url }} to -->
+                  <img src="{{ employee_info.employee.photo.url|default:'url_to_default_photo' }}"
+                       alt="{{ employee_info.employee.first_name }}"
+                       class="img-fluid rounded-circle" style="width: 50px; height: 50px; object-fit: cover;">
+                </td>
+                <td class="align-middle text-center">{{ employee_info.employee.first_name }} {{ employee_info.employee.last_name }}</td>
+                <td class="align-middle text-center">{{ employee_info.date_of_birth }}</td>
               </tr>
               {% endfor %}
               </tbody>
@@ -38,4 +45,4 @@
     </div>
   </div>
 </div>
-  {% endblock %}
+{% endblock %}

@@ -1,11 +1,13 @@
 {% extends 'employees/base.html' %}
 
 {% block body %}
-<h3 class="text-center m-4">Add Employee</h3>
+<h3 class="text-center m-4"></h3>
 {% if success %}
 <div class="alert alert-success" role="alert">
   New employee added successfully!
   <a href="{% url 'active_employees' %}" class="alert-link">Employee list</a>
+  or
+  <a href="{% url 'index' %}" class="alert-link">Home</a>
 </div>
 {% else %}
 <div class="row justify-content-center">
@@ -19,7 +21,7 @@
           {% csrf_token %}
           {{ form.as_p }}
           <button type="submit" class="btn btn-primary">Add</button>
-          <a href="{% url 'active_employees' %}" class="btn btn-secondary">Cancel</a>
+          <a href="{% url 'index' %}" class="btn btn-secondary">Cancel</a>
         </form>
       </div>
     </div>
