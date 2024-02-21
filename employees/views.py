@@ -6,6 +6,30 @@ from django.views.decorators.http import require_POST
 from django.contrib import messages
 from django.db.models import Q
 from django.contrib.auth.decorators import login_required
+from django.shortcuts import render, redirect
+from django.contrib import messages
+from django.contrib.auth.models import User
+from django.urls import reverse
+from django.core.mail import send_mail
+from django.utils.http import urlsafe_base64_encode
+from django.utils.encoding import force_bytes
+from django.contrib.auth.tokens import default_token_generator
+from django.core.mail import send_mail
+from django.shortcuts import render, redirect
+from .models import Invitation
+from django.conf import settings
+from django.contrib.auth.decorators import login_required
+from django.contrib.auth.models import User
+from django.shortcuts import render, redirect
+from .models import Invitation
+from django.contrib.auth import login
+from django.contrib.auth.models import User
+from django.contrib.auth.password_validation import validate_password
+from django.core.exceptions import ValidationError
+from django.contrib import messages
+from django.shortcuts import render, redirect
+from django.utils import timezone
+from datetime import timedelta
 
 from .models import Employee, Employee_information, Department, Position, Internal_permission, External_permission, \
     DeactivationLog
@@ -301,3 +325,80 @@ class CustomPasswordResetConfirmView(PasswordResetConfirmView):
         if not self.validlink:
             return [self.template_name_invalid]
         return [self.template_name]
+
+
+@login_required
+def create_invitation(request):
+    if request.method == 'POST':
+        email = request.POST.get('email')
+
+        # Check if a user with this email already exists
+        if User.objects.filter(email=email).exists():
+            # Customize this message as needed
+            messages.error(request, 'An account with this email already exists.')
+        else:
+            # Expire any existing invitations for this email
+            Invitation.objects.filter(email=email, is_used=False).update(is_expired=True)
+
+            # Create a new invitation
+            new_invitation = Invitation.objects.create(email=email)
+
+            # Construct the invitation link (adjust URL as needed)
+            invite_link = request.build_absolute_uri('/register/') + '?token=' + str(new_invitation.token)
+
+            # Logic to send an email with the new invitation
+            try:
+                send_mail(
+                    subject='Your Invitation to Register',
+                    message=f'Please use the following link to register: {invite_link}',
+                    from_email=settings.EMAIL_HOST_USER,
+                    recipient_list=[email],
+                    fail_silently=False,
+                )
+                messages.success(request, 'A new invitation has been sent successfully to ' + email)
+            except Exception as e:
+                messages.error(request, f'An error occurred while sending the invitation: {e}')
+
+    return render(request, 'new_user/create_invitation.html')
+
+
+def register(request):
+    token = request.GET.get('token')
+    invitation = Invitation.objects.filter(token=token, is_expired=False).first()
+
+    if not invitation:
+        return render(request, 'new_user/expired_token.html')
+
+    # Check if the invitation has expired
+    if timezone.now() > invitation.created_at + timedelta(minutes=15):
+        invitation.is_expired = True
+        invitation.save()
+        return render(request, 'new_user/expired_token.html')
+
+    if request.method == 'POST':
+        username = request.POST.get('username')
+        password = request.POST.get('password')
+        confirm_password = request.POST.get('confirm_password')
+
+        if User.objects.filter(username=username).exists():
+            messages.error(request, 'Username is already taken.')
+        elif password != confirm_password:
+            messages.error(request, 'Passwords do not match.')
+        else:
+            try:
+                validate_password(password)
+                user = User.objects.create_user(username=username, password=password, email=invitation.email)
+                # Mark the invitation as used
+                invitation.is_used = True
+                invitation.save()
+                # Redirect or log in the user
+                return redirect('login')
+            except ValidationError as e:
+                for error in e.messages:
+                    messages.error(request, error)
+
+        # If validation fails, reload the registration page with the token
+        return render(request, 'new_user/register.html', {'token': token})
+
+    # Handle GET request with token for initial registration page load
+    return render(request, 'new_user/register.html', {'token': token})

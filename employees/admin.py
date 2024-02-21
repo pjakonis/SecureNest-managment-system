@@ -3,9 +3,12 @@ from django.db.models import Count
 from django.utils.html import format_html, urlencode
 from django.urls import reverse
 from django.contrib.contenttypes.admin import GenericTabularInline
+from django.contrib import admin
+from .models import Invitation
+import uuid
 
 from .models import Employee, Department, Position, Employee_information, Internal_permission, External_permission, \
-    DeactivationLog
+    DeactivationLog, Invitation
 
 import datetime
 from django.utils import timezone
@@ -181,3 +184,15 @@ class External_permissionAdmin(admin.ModelAdmin):
             return 'Expires today'
         else:
             return 'Valid'
+
+@admin.register(Invitation)
+class InvitationAdmin(admin.ModelAdmin):
+    list_display = ['email', 'token', 'is_used', 'is_expired', 'created_at']
+    list_filter = ['is_used', 'is_expired', 'created_at']
+    search_fields = ['email', 'token']
+    readonly_fields = ['email', 'token', 'is_used', 'is_expired', 'created_at']
+
+    def get_readonly_fields(self, request, obj=None):
+        if obj:  # Editing an existing object
+            return ['email', 'token', 'created_at'] + list(self.readonly_fields)
+        return self.readonly_fields

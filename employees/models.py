@@ -1,3 +1,5 @@
+import uuid
+
 from django.db import models
 from django.core.validators import MinValueValidator
 from datetime import date
@@ -154,3 +156,14 @@ class DeactivationLog(models.Model):
 
     def __str__(self):
         return f'{self.employee.first_name} {self.employee.last_name}'
+
+
+class Invitation(models.Model):
+    email = models.EmailField(unique=False)
+    token = models.UUIDField(default=uuid.uuid4, editable=False)
+    is_used = models.BooleanField(default=False)
+    is_expired = models.BooleanField(default=False)
+    created_at = models.DateTimeField(auto_now_add=True)  # Automatically set the field to now when the object is first created.
+
+    def __str__(self):
+        return self.email
