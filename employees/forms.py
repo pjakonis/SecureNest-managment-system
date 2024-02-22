@@ -4,6 +4,11 @@ from .models import Employee, Employee_information, Department, Position, Intern
 
 
 class EmployeeForm(forms.ModelForm):
+    hire_date = forms.DateField(
+        input_formats=['%Y-%m-%d'],  # List of allowed input formats
+        widget=forms.DateInput(attrs={'class': 'form-control', 'type': 'date'}, format='%Y-%m-%d'),
+        required=False  # Set to True if the field is required
+    )
     class Meta:
         model = Employee
         fields = '__all__'
@@ -21,7 +26,6 @@ class EmployeeForm(forms.ModelForm):
             'first_name': forms.TextInput(attrs={'class': 'form-control'}),
             'last_name': forms.TextInput(attrs={'class': 'form-control'}),
             'photo': forms.FileInput(attrs={'class': 'form-control'}),
-            'hire_date': forms.DateInput(attrs={'class': 'form-control', 'type': 'date'}, format='%Y-%m-%d'),
             'department': forms.Select(attrs={'class': 'form-control'}),
             'position': forms.Select(attrs={'class': 'form-control'}),
             'verification': forms.HiddenInput(),

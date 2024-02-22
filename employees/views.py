@@ -4,7 +4,7 @@ from django.urls import reverse
 from django.shortcuts import render, get_object_or_404, redirect
 from django.views.decorators.http import require_POST
 from django.contrib import messages
-from django.db.models import Q
+from django.db.models import Q, Prefetch
 from django.contrib.auth.decorators import login_required
 from django.shortcuts import render, redirect
 from django.contrib import messages
@@ -49,9 +49,13 @@ def valid_employees(request):
     sort_by = request.GET.get('sort', 'first_name')
     order = request.GET.get('order', 'asc')
 
+    # Prefetch sorted internal and external permissions
+    internal_permissions_prefetch = Prefetch('internal_permission_set', queryset=Internal_permission.objects.order_by('-permit_expiry_date'))
+    external_permissions_prefetch = Prefetch('external_permission_set', queryset=External_permission.objects.order_by('-permit_expiry_date'))
+
     employees = Employee.objects.filter(
         verification=Employee.VERIFICATION_ACTIVE
-    ).select_related('department').prefetch_related('employee_information')
+    ).select_related('department').prefetch_related('employee_information', internal_permissions_prefetch, external_permissions_prefetch)
 
     if search_query:
         employees = employees.filter(
@@ -61,7 +65,6 @@ def valid_employees(request):
             Q(position__name__istartswith=search_query)
         )
 
-    # Apply sorting to the filtered results
     if order == 'desc':
         sort_by = f'-{sort_by}'
     employees = employees.order_by(sort_by)
@@ -69,6 +72,7 @@ def valid_employees(request):
     return render(request, 'employees/active_employees.html', {
         'employees': employees
     })
+
 
 
 @login_required
@@ -364,12 +368,14 @@ def create_invitation(request):
 
 def register(request):
     token = request.GET.get('token')
-    invitation = Invitation.objects.filter(token=token, is_expired=False).first()
+    # Attempt to fetch an invitation that is not expired and not used
+    invitation = Invitation.objects.filter(token=token, is_expired=False, is_used=False).first()
 
-    if not invitation:
+    if not invitation or invitation.is_used:
+        # If no invitation is found, or it's already been used, show the expired token page
         return render(request, 'new_user/expired_token.html')
 
-    # Check if the invitation has expired
+    # Check if the invitation has expired by time
     if timezone.now() > invitation.created_at + timedelta(minutes=15):
         invitation.is_expired = True
         invitation.save()
@@ -387,6 +393,7 @@ def register(request):
         else:
             try:
                 validate_password(password)
+                # Assuming you want to proceed with user creation
                 user = User.objects.create_user(username=username, password=password, email=invitation.email)
                 # Mark the invitation as used
                 invitation.is_used = True

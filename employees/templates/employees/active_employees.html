@@ -98,7 +98,7 @@
                               </tr>
                               <tr>
                                 <th scope="row">Date Of Birth</th>
-                                <td>{{ employee.employee_information.date_of_birth }}</td>
+                                <td>{{ employee.employee_information.date_of_birth|date:"Y-m-d" }}</td>
                               </tr>
                               <tr>
                                 <th scope="row">Email</th>
@@ -193,10 +193,11 @@
                           </thead>
                           <tbody>
                           {% for permission in employee.internal_permission_set.all %}
-                          <tr>
+                          {% with status=permission.is_expiring_or_expired %}
+                          <tr class="{% if status == 'expired' %}table-danger{% elif status == 'expiring' %}table-warning{% else %}table-success{% endif %}">
                             <td>{{ permission.permit_number }}</td>
-                            <td>{{ permission.permit_issue_date }}</td>
-                            <td>{{ permission.permit_expiry_date }}</td>
+                            <td>{{ permission.permit_issue_date|date:"Y-m-d" }}</td>
+                            <td>{{ permission.permit_expiry_date|date:"Y-m-d" }}</td>
                             <td>{{ permission.description }}</td>
                             <td>{{ permission.tag }}</td>
                             <td>
@@ -249,6 +250,7 @@
                               </div>
                             </div>
                           </tr>
+                          {% endwith %}
                           {% endfor %}
                           </tbody>
                         </table>
@@ -265,10 +267,11 @@
                           </thead>
                           <tbody>
                           {% for permission in employee.external_permission_set.all %}
-                          <tr>
+                          {% with status=permission.is_expiring_or_expired %}
+                          <tr class="{% if status == 'expired' %}table-danger{% elif status == 'expiring' %}table-warning{% else %}table-success{% endif %}">
                             <td>{{ permission.permit_number }}</td>
-                            <td>{{ permission.permit_issue_date }}</td>
-                            <td>{{ permission.permit_expiry_date }}</td>
+                            <td>{{ permission.permit_issue_date|date:"Y-m-d" }}</td>
+                            <td>{{ permission.permit_expiry_date|date:"Y-m-d" }}</td>
                             <td>
                               {% if permission.attachment %}
                               <a href="{{ permission.attachment.url }}" target="_blank"><i
@@ -316,6 +319,7 @@
                               </div>
                             </td>
                           </tr>
+                          {% endwith %}
                           {% endfor %}
                           </tbody>
                         </table>

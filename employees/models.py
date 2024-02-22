@@ -2,9 +2,12 @@ import uuid
 
 from django.db import models
 from django.core.validators import MinValueValidator
-from datetime import date
+from datetime import date, timedelta
 from django.utils.translation import gettext_lazy as _
 from PIL import Image
+from django.db import models
+from django.utils import timezone
+from datetime import timedelta, date
 
 
 class Employee(models.Model):
@@ -124,6 +127,17 @@ class Internal_permission(models.Model):
     tag = models.CharField(max_length=2, choices=TAG_CHOICES, default=TAG_REJECTED)
     attachment = models.FileField(upload_to='internal_permissions/', null=True, blank=True)
 
+    @property
+    def is_expiring_or_expired(self):
+        today = timezone.now().date()
+        six_months_ahead = today + timedelta(days=30 * 6)
+        if self.permit_expiry_date < today:
+            return 'expired'
+        elif self.permit_expiry_date <= six_months_ahead:
+            return 'expiring'
+        else:
+            return 'active'
+
     def __str__(self):
         return f'{self.employee.first_name} {self.employee.last_name} {self.permit_number}'
 
@@ -139,6 +153,17 @@ class External_permission(models.Model):
     permit_issue_date = models.DateField(null=True, blank=True)
     permit_expiry_date = models.DateField(null=True, blank=True)
     attachment = models.FileField(upload_to='external_permissions/', null=True, blank=True)
+
+    @property
+    def is_expiring_or_expired(self):
+        today = timezone.now().date()
+        six_months_ahead = today + timedelta(days=30 * 6)
+        if self.permit_expiry_date < today:
+            return 'expired'
+        elif self.permit_expiry_date <= six_months_ahead:
+            return 'expiring'
+        else:
+            return 'active'
 
     def __str__(self):
         return f'{self.employee.first_name} {self.employee.last_name} {self.permit_number}'
@@ -163,7 +188,8 @@ class Invitation(models.Model):
     token = models.UUIDField(default=uuid.uuid4, editable=False)
     is_used = models.BooleanField(default=False)
     is_expired = models.BooleanField(default=False)
-    created_at = models.DateTimeField(auto_now_add=True)  # Automatically set the field to now when the object is first created.
+    created_at = models.DateTimeField(
+        auto_now_add=True)  # Automatically set the field to now when the object is first created.
 
     def __str__(self):
         return self.email
