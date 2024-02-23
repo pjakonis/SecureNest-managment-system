@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-02-23 14:54+0200\n"
+"POT-Creation-Date: 2024-02-23 15:16+0200\n"
 "PO-Revision-Date: 2024-02-23 14:55+0200\n"
 "Last-Translator: \n"
 "Language-Team: \n"
@@ -475,16 +475,6 @@ msgstr "Pridėti leidimą"
 msgid "Add Employee"
 msgstr "Pridėti darbuotoją"
 
-#: templates/employees/base.html:51 templates/new_user/expired_token.html:12
-#: templates/registration/login.html:12
-#: templates/registration/password_reset_complete.html:11
-#: templates/registration/password_reset_confirm.html:11
-#: templates/registration/password_reset_confirm_invalid.html:11
-#: templates/registration/password_reset_done.html:11
-#: templates/registration/password_reset_form.html:11
-msgid "Language"
-msgstr "Kalbos"
-
 #: templates/employees/base.html:75
 msgid "Hello, "
 msgstr "Sveiki, "
@@ -541,7 +531,6 @@ msgstr "Atnaujinti leidimą:"
 
 #: templates/employees/inactive_employees.html:7
 #: templates/employees/inactive_employees.html:380
-#: templates/employees/kopija.html:7
 msgid "Inactive Employees"
 msgstr "Neaktyvūs darbuotojai"
 
@@ -599,19 +588,19 @@ msgstr "Siųsti pakvietimą"
 msgid "Invite link has expired. Please request a new invitation."
 msgstr "Kvietimo nuoroda nebegalioja. Paprašykite naujo kvietimo."
 
-#: templates/new_user/register.html:96 templates/registration/login.html:118
+#: templates/new_user/register.html:120 templates/registration/login.html:118
 msgid "Username"
 msgstr "Vartotojo vardas"
 
-#: templates/new_user/register.html:99 templates/registration/login.html:121
+#: templates/new_user/register.html:123 templates/registration/login.html:121
 msgid "Password"
 msgstr "Slaptažodis"
 
-#: templates/new_user/register.html:102
+#: templates/new_user/register.html:126
 msgid "Confirm Password"
 msgstr "Pakartoti slaptažodį"
 
-#: templates/new_user/register.html:105
+#: templates/new_user/register.html:129
 msgid "Register"
 msgstr "Registruotis"
 
@@ -682,6 +671,9 @@ msgid ""
 msgstr ""
 "Jums bus išsiųstas el. laiškas su instrukcijomis, kaip iš naujo nustatyti "
 "slaptažodį."
+
+#~ msgid "Language"
+#~ msgstr "Kalbos"
 
 #~ msgid "First Name!"
 #~ msgstr "Vardas!"
