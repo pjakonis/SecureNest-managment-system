@@ -43,4 +43,5 @@ urlpatterns = [
                   path('create_invitation/', create_invitation, name='create_invitation'),
                   path('register/', register, name='register'),
                   path('expired_token/', register, name='expired_token'),
+
               ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

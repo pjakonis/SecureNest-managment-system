@@ -1,28 +1,13 @@
-from django.http import HttpResponseRedirect, HttpResponseNotAllowed
-from django.shortcuts import render
-from django.urls import reverse
+
 from django.shortcuts import render, get_object_or_404, redirect
 from django.views.decorators.http import require_POST
-from django.contrib import messages
 from django.db.models import Q, Prefetch
-from django.contrib.auth.decorators import login_required
-from django.shortcuts import render, redirect
-from django.contrib import messages
-from django.contrib.auth.models import User
-from django.urls import reverse
 from django.core.mail import send_mail
-from django.utils.http import urlsafe_base64_encode
-from django.utils.encoding import force_bytes
-from django.contrib.auth.tokens import default_token_generator
-from django.core.mail import send_mail
-from django.shortcuts import render, redirect
-from .models import Invitation
+
 from django.conf import settings
 from django.contrib.auth.decorators import login_required
-from django.contrib.auth.models import User
-from django.shortcuts import render, redirect
+
 from .models import Invitation
-from django.contrib.auth import login
 from django.contrib.auth.models import User
 from django.contrib.auth.password_validation import validate_password
 from django.core.exceptions import ValidationError

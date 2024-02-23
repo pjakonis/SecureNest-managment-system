@@ -1,10 +1,36 @@
 {% load static %}
+
+{% load i18n %}
 <!DOCTYPE html>
 <html lang="en">
 <head>
+    <div class="language-switcher" style="position: absolute; right: 10px; top: 20px;">
+    <div class="dropdown">
+        <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton" data-bs-toggle="dropdown" aria-expanded="false">
+            {% trans "Language" %}
+        </button>
+        <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+            {% get_current_language as LANGUAGE_CODE %}
+            {% get_available_languages as LANGUAGES %}
+            {% for lang in LANGUAGES %}
+            <li>
+                <a class="dropdown-item" href="#" onclick="event.preventDefault(); document.getElementById('lang-form-{{ lang.0 }}').submit();">
+                    {{ lang.1 }}
+                </a>
+                <form id="lang-form-{{ lang.0 }}" action="{% url 'set_language' %}" method="post" style="display: none;">
+                    {% csrf_token %}
+                    <input type="hidden" name="language" value="{{ lang.0 }}">
+                    <!-- Update the value of 'next' to include the full current URL, including query parameters -->
+                    <input type="hidden" name="next" value="{{ request.build_absolute_uri }}">
+                </form>
+            </li>
+            {% endfor %}
+        </ul>
+    </div>
+</div>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Employee Management System - Register</title>
+    <title>SecureNest - Register</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
     <link href="{% static 'css/bootstrap.min.css' %}" rel="stylesheet">
     <style>
@@ -91,16 +117,16 @@
         <form method="post">
             {% csrf_token %}
             <div class="mb-3">
-                <input type="text" name="username" class="form-control" placeholder="Username" required autofocus>
+                <input type="text" name="username" class="form-control" placeholder="{% blocktrans %}Username{% endblocktrans %}" required autofocus>
             </div>
             <div class="mb-3">
-                <input type="password" name="password" class="form-control" placeholder="Password" required>
+                <input type="password" name="password" class="form-control" placeholder="{% blocktrans %}Password{% endblocktrans %}" required>
             </div>
             <div class="mb-3">
-                <input type="password" name="confirm_password" class="form-control" placeholder="Confirm Password" required>
+                <input type="password" name="confirm_password" class="form-control" placeholder="{% blocktrans %}Confirm Password{% endblocktrans %}" required>
             </div>
             <div class="d-grid gap-2">
-                <button type="submit" class="btn btn-primary btn-block">Register</button>
+                <button type="submit" class="btn btn-primary btn-block">{% trans "Register" %}</button>
             </div>
         </form>
     </div>

@@ -1,20 +1,22 @@
 {% extends 'employees/base.html' %}
 
+{% load i18n %}
+
 {% block body %}
 <h3 class="text-center m-4"></h3>
 <div class="row justify-content-center">
     <div class="col-6">
         <div class="card bg-light mb-3">
             <div class="card-header">
-                <i class="fa-solid fa-envelope fa-lg"></i> Invite New User
+                <i class="fa-solid fa-envelope fa-lg"></i> {% trans "Invite New User" %}
             </div>
             <div class="card-body">
                 <form method="POST" action="{% url 'create_invitation' %}">
                     {% csrf_token %}
                     <div class="form-group">
-                        <input type="email" class="form-control" id="emailInput" name="email" placeholder="Enter email" required>
+                        <input type="email" class="form-control" id="emailInput" name="email" placeholder="{% blocktrans %}Enter email{% endblocktrans %}" required>
                     </div>
-                    <button type="submit" class="btn btn-primary mt-2">Send Invitation</button>
+                    <button type="submit" class="btn btn-primary mt-2">{% trans "Send Invitation" %}</button>
                 </form>
             </div>
         </div>

@@ -1,11 +1,10 @@
-{% extends 'employees/base.html' %} {% load custom_filters %} {% block body %}
+{% extends 'employees/base.html' %} {% load i18n %} {% load custom_filters %} {% block body %}
 <div class="row mt-5">
   <div class="col-12">
     {% if employees %}
     <div class="card bg-light ms-4 me-4 mb-4">
       <div class="card-header d-flex justify-content-between align-items-center">
-        <div style="color: #37b281;"><i class="fa-regular fa-square-check fa-lg" style="color: #37b281;"></i> Active
-          Employees
+        <div style="color: #37b281;"><i class="fa-regular fa-square-check fa-lg" style="color: #37b281;"></i> {% trans "Active Employees" %}
         </div>
       </div>
       <div class="card-body">
@@ -15,9 +14,9 @@
               {% if request.GET.q %}
               <a href="{% url 'active_employees' %}" class="btn btn-outline-secondary"><i class="fa fa-times"></i></a>
               {% endif %}
-              <input type="text" class="form-control" placeholder="Search for employee or department..." name="q"
+              <input type="text" class="form-control" placeholder="{% blocktrans %}Search for employee or department...{% endblocktrans %}" name="q"
                      value="{{ request.GET.q }}"/>
-              <button class="btn btn-outline-secondary" type="submit"><i class="fa fa-search"></i> Search</button>
+              <button class="btn btn-outline-secondary" type="submit"><i class="fa fa-search"></i> {% trans "Search" %}</button>
             </div>
           </form>
           <table class="table table-hover">
@@ -26,23 +25,23 @@
               <th scope="col"></th>
               <th scope="col">
                 <a href="?sort=first_name&order={% if request.GET.sort == 'first_name' and request.GET.order == 'asc' %}desc{% else %}asc{% endif %}{% if request.GET.q %}&q={{ request.GET.q }}{% endif %}">
-                  First Name
+                  {% trans "First Name" %}
                 </a>
               </th>
               <th scope="col">
                 <a href="?sort=last_name&order={% if request.GET.sort == 'last_name' and request.GET.order == 'asc' %}desc{% else %}asc{% endif %}{% if request.GET.q %}&q={{ request.GET.q }}{% endif %}">
-                  Last Name
+                  {% trans "Last Name" %}
                 </a>
               </th>
               <th scope="col">
                 <a href="?sort=department__name&order={% if request.GET.sort == 'department__name' and request.GET.order == 'asc' %}desc{% else %}asc{% endif %}{% if request.GET.q %}&q={{ request.GET.q }}{% endif %}">
-                  Department
+                  {% trans "Department" %}
                 </a>
               </th>
 
               <th scope="col">
                 <a href="?sort=position__name&order={% if request.GET.sort == 'position__name' and request.GET.order == 'asc' %}desc{% else %}asc{% endif %}{% if request.GET.q %}&q={{ request.GET.q }}{% endif %}">
-                  Position
+                  {% trans "Position" %}
                 </a>
               </th>
               <th scope="col" style="width: 150px;"></th>
@@ -73,7 +72,7 @@
                         <h5 class="modal-title" id="modalLabel{{employee.id}}">
                           {{ employee.first_name }} {{ employee.last_name }}
                         </h5>
-                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="{% blocktrans %}Close{% endblocktrans %}"></button>
                       </div>
                       <div class="modal-body">
                         <div class="row">
@@ -90,35 +89,35 @@
                               <tbody>
                               <!-- Employee Details -->
                               <tr>
-                                <th scope="row">Department</th>
+                                <th scope="row">{% trans "Department" %}</th>
                                 <td>{{ employee.department }}</td>
                               <tr>
-                                <th scope="row">Position</th>
+                                <th scope="row">{% trans "Position" %}</th>
                                 <td>{{ employee.position }}</td>
                               </tr>
                               <tr>
-                                <th scope="row">Date Of Birth</th>
+                                <th scope="row">{% trans "Date of Birth" %}</th>
                                 <td>{{ employee.employee_information.date_of_birth|date:"Y-m-d" }}</td>
                               </tr>
                               <tr>
-                                <th scope="row">Email</th>
+                                <th scope="row">{% trans "Email" %}</th>
                                 <td>{{ employee.employee_information.email }}</td>
                               </tr>
                               <tr>
-                                <th scope="row">Phone</th>
+                                <th scope="row">{% trans "Phone Number" %}</th>
                                 <td>{{ employee.employee_information.phone_number }}</td>
                               </tr>
                               <tr>
-                                <th scope="row">Address</th>
+                                <th scope="row">{% trans "Address" %}</th>
                                 <td>{{ employee.employee_information.address }}</td>
                               </tr>
                               <tr>
-                                <th scope="row">File</th>
+                                <th scope="row">{% trans "City" %}</th>
                                 <td>
                                   {% if employee.attachment %}
                                   <a href="{{ employee.attachment.url }}" target="_blank">
                                     {{ employee.attachment.name|filename }}</a>
-                                  {% else %} No file attached {% endif %}
+                                  {% else %} {% trans "No file attached" %} {% endif %}
                                 </td>
                               </tr>
                               </tbody>
@@ -128,10 +127,10 @@
                       </div>
                       <div class="modal-footer">
                         <a class="btn btn-warning" href="{% url 'edit_employee' employee.id %}">
-                          <i class="fa-solid fa-user-pen fa-lg"></i> Update</a>
+                          <i class="fa-solid fa-user-pen fa-lg"></i> {% trans "Update" %}</a>
                         <button type="button" class="btn btn-danger" data-bs-toggle="modal"
                                 data-bs-target="#deleteModal{{employee.id}}"><i
-                                class="fa-solid fa-user-minus fa-lg"></i> Deactivate
+                                class="fa-solid fa-user-minus fa-lg"></i> {% trans "Deactivate" %}
                         </button>
                         <div class="modal" id="deleteModal{{employee.id}}" tabindex="-1" aria-labelledby="modalLabel2"
                              aria-hidden="true">
@@ -142,17 +141,17 @@
                                   {{ employee.first_name }} {{ employee.last_name }}
                                 </h5>
                                 <button type="button" class="btn-close" data-bs-dismiss="modal"
-                                        aria-label="Close"></button>
+                                        aria-label="{% blocktrans %}Close{% endblocktrans %}"></button>
                               </div>
                               <div class="modal-body">
-                                <p>Are you sure you want to deactivate {{ employee.first_name }}
+                                <p>{% trans "Are you sure you want to deactivate" %} {{ employee.first_name }}
                                   {{ employee.last_name }}?</p>
                               </div>
                               <div class="modal-footer">
                                 <form action="{% url 'delete' employee.id %}" method="POST">
                                   {% csrf_token %}
-                                  <input type="submit" class="btn btn-danger" value="Make Inactive"/>
-                                  <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel
+                                  <input type="submit" class="btn btn-danger" value="{% blocktrans %}Make Inactive{% endblocktrans %}"/>
+                                  <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">{% trans "Cancel" %}
                                   </button>
                                 </form>
                               </div>
@@ -174,21 +173,21 @@
                     <div class="modal-content">
                       <div class="modal-header">
                         <h5 class="modal-title" id="permissionsModalLabel{{employee.id}}">{{ employee.first_name }}
-                          {{ employee.last_name }} - Permissions</h5>
-                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                          {{ employee.last_name }} - {% trans "Permissions" %}</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="{% blocktrans %}Close{% endblocktrans %}"></button>
                       </div>
                       <div class="modal-body">
-                        <h6>Internal Permissions</h6>
+                        <h6>{% trans "Internal Permissions" %}</h6>
                         <table class="table">
                           <thead>
                           <tr class="table-active">
-                            <th>Permit Number</th>
-                            <th>Permit Issue Date</th>
-                            <th>Permit Expiration Date</th>
-                            <th>Description</th>
-                            <th>Tag</th>
-                            <th>File</th>
-                            <th style="width: 120px;">Actions</th>
+                            <th>{% trans "Permit Number" %}</th>
+                            <th>{% trans "Permit Issue Date" %}</th>
+                            <th>{% trans "Permit Expiration Date" %}</th>
+                            <th>{% trans "Description" %}</th>
+                            <th>{% trans "Tag" %}</th>
+                            <th>{% trans "File" %}</th>
+                            <th style="width: 120px;">{% trans "Actions" %}</th>
                           </tr>
                           </thead>
                           <tbody>
@@ -229,20 +228,19 @@
                               <div class="modal-dialog modal-dialog-centered" role="document">
                                 <div class="modal-content">
                                   <div class="modal-header">
-                                    <h5 class="modal-title" id="deleteInternalModalLabel{{permission.id}}">Delete
-                                      Internal Permission</h5>
+                                    <h5 class="modal-title" id="deleteInternalModalLabel{{permission.id}}">{% trans "Delete Internal Permission" %}</h5>
                                     <button type="button" class="btn-close" data-bs-dismiss="modal"
-                                            aria-label="Close"></button>
+                                            aria-label="{% blocktrans %}Close{% endblocktrans %}"></button>
                                   </div>
                                   <div class="modal-body">
-                                    <p>Are you sure you want to delete this permission?</p>
+                                    <p>{% trans "Are you sure you want to delete this permission?" %}</p>
                                   </div>
                                   <div class="modal-footer">
                                     <form action="{% url 'delete_internal_permission' permission.id %}" method="post">
                                       {% csrf_token %}
-                                      <input type="submit" class="btn btn-danger" value="Delete"/>
+                                      <input type="submit" class="btn btn-danger" value="{% blocktrans %}Delete{% endblocktrans %}"/>
                                       <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
-                                        Cancel
+                                        {% trans "Cancel" %}
                                       </button>
                                     </form>
                                   </div>
@@ -254,15 +252,15 @@
                           {% endfor %}
                           </tbody>
                         </table>
-                        <h6>External Permissions</h6>
+                        <h6>{% trans "External Permissions" %}</h6>
                         <table class="table">
                           <thead>
                           <tr class="table-active">
-                            <th>Permit Number</th>
-                            <th>Permit Issue Date</th>
-                            <th>Permit Expiration Date</th>
-                            <th>File</th>
-                            <th>Actions</th>
+                            <th>{% trans "Permit Number" %}</th>
+                            <th>{% trans "Permit Issue Date" %}</th>
+                            <th>{% trans "Permit Expiration Date" %}</th>
+                            <th>{% trans "File" %}</th>
+                            <th>{% trans "Actions" %}</th>
                           </tr>
                           </thead>
                           <tbody>
@@ -297,20 +295,19 @@
                                 <div class="modal-dialog modal-dialog-centered" role="document">
                                   <div class="modal-content">
                                     <div class="modal-header">
-                                      <h5 class="modal-title" id="deleteExternalModalLabel{{permission.id}}">Delete
-                                        External Permission</h5>
+                                      <h5 class="modal-title" id="deleteExternalModalLabel{{permission.id}}">{% trans "Delete External Permission" %}</h5>
                                       <button type="button" class="btn-close" data-bs-dismiss="modal"
-                                              aria-label="Close"></button>
+                                              aria-label="{% blocktrans %}Close{% endblocktrans %}"></button>
                                     </div>
                                     <div class="modal-body">
-                                      <p>Are you sure you want to delete this permission?</p>
+                                      <p>{% trans "Are you sure you want to delete this permission?" %}</p>
                                     </div>
                                     <div class="modal-footer">
                                       <form action="{% url 'delete_external_permission' permission.id %}" method="post">
                                         {% csrf_token %}
-                                        <input type="submit" class="btn btn-danger" value="Delete"/>
+                                        <input type="submit" class="btn btn-danger" value="{% blocktrans %}Delete{% endblocktrans %}"/>
                                         <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
-                                          Cancel
+                                          {% trans "Cancel" %}
                                         </button>
                                       </form>
                                     </div>
@@ -325,10 +322,8 @@
                         </table>
                       </div>
                       <div class="modal-footer">
-                        <a href="{% url 'add_internal_permission' employee.id %}" class="btn btn-success">Add Internal
-                          Permission</a>
-                        <a href="{% url 'add_external_permission' employee.id %}" class="btn btn-info">Add External
-                          Permission</a>
+                        <a href="{% url 'add_internal_permission' employee.id %}" class="btn btn-success">{% trans "Add Internal Permission" %}</a>
+                        <a href="{% url 'add_external_permission' employee.id %}" class="btn btn-info">{% trans "Add External Permission" %}</a>
                       </div>
                     </div>
                   </div>
@@ -344,8 +339,7 @@
     {% else %}
     <div class="card bg-light ms-4 me-4 mb-4">
       <div class="card-header d-flex justify-content-between align-items-center">
-        <div style="color: #37b281;"><i class="fa-regular fa-square-check fa-lg" style="color: #37b281;"></i> Active
-          Employees
+        <div style="color: #37b281;"><i class="fa-regular fa-square-check fa-lg" style="color: #37b281;"></i> {% trans "Active Employees" %}
         </div>
       </div>
       <div class="card-body">
@@ -357,22 +351,22 @@
               {% endif %}
               <input type="text" class="form-control" placeholder="Search for employee or department..." name="q"
                      value="{{ request.GET.q }}"/>
-              <button class="btn btn-outline-secondary" type="submit"><i class="fa fa-search"></i> Search</button>
+              <button class="btn btn-outline-secondary" type="submit"><i class="fa fa-search"></i> {% trans "Search" %}</button>
             </div>
           </form>
           <table class="table table-hover">
             <thead>
             <tr>
-              <th scope="col"><a>First Name</a></th>
-              <th scope="col"><a>Last Name</a></th>
-              <th scope="col"><a>Department</a></th>
-              <th scope="col"><a>Position</a></th>
-              <th scope="col">Actions</th>
+              <th scope="col"><a>{% trans "First Name" %}</a></th>
+              <th scope="col"><a>{% trans "Last Name" %}</a></th>
+              <th scope="col"><a>{% trans "Department" %}</a></th>
+              <th scope="col"><a>{% trans "Position" %}</a></th>
+              <th scope="col">{% trans "Actions" %}</th>
             </tr>
             </thead>
           </table>
           <div class="text-center">
-            <h6>No employees found</h6>
+            <h6>{% trans "No active employees found." %}</h6>
           </div>
         </div>
       </div>

@@ -1,25 +1,25 @@
 {% extends 'employees/base.html' %}
-
+{% load i18n %}
 {% block body %}
 <h3 class="text-center m-4"></h3>
 {% if success %}
 <div class="alert alert-success" role="alert">
-  Employee deactivated successfully!
-  <a href="{% url 'inactive_employees' %}" class="alert-link">Inactive employees</a>
+  {% trans "Employee deactivated successfully!" %}
+  <a href="{% url 'inactive_employees' %}" class="alert-link">{% trans "Inactive Employee list" %}</a>
 </div>
 {% else %}
 <div class="row justify-content-center">
   <div class="col-6">
     <div class="card bg-light mb-3">
       <div class="card-header">
-        <i class="fa-solid fa-pen-to-square fa-lg"></i> Deactivate Employee: {{ employee.first_name }} {{ employee.last_name }}
+        <i class="fa-solid fa-pen-to-square fa-lg"></i> {% trans "Deactivate Employee" %}: {{ employee.first_name }} {{ employee.last_name }}
       </div>
       <div class="card-body">
         <form action="" method="POST">
           {% csrf_token %}
           {{ form }}
-          <button type="submit" class="btn btn-primary mt-3">Make Inactive</button>
-          <a href="{% url 'active_employees' %}" class="btn btn-secondary mt-3">Cancel</a>
+          <button type="submit" class="btn btn-primary mt-3">{% trans "Deactivate" %}</button>
+          <a href="{% url 'active_employees' %}" class="btn btn-secondary mt-3">{% trans "Cancel" %}</a>
         </form>
       </div>
     </div>

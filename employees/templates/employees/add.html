@@ -1,27 +1,29 @@
 {% extends 'employees/base.html' %}
 
+{% load i18n %}
+
 {% block body %}
 <h3 class="text-center m-4"></h3>
 {% if success %}
 <div class="alert alert-success" role="alert">
-  New employee added successfully!
-  <a href="{% url 'active_employees' %}" class="alert-link">Employee list</a>
+  {% trans "New employee added successfully!" %}
+  <a href="{% url 'active_employees' %}" class="alert-link">{% trans "Employee list" %}</a>
   or
-  <a href="{% url 'index' %}" class="alert-link">Home</a>
+  <a href="{% url 'index' %}" class="alert-link">{% trans "Home" %}</a>
 </div>
 {% else %}
 <div class="row justify-content-center">
   <div class="col-6">
     <div class="card bg-light mb-3">
       <div class="card-header">
-        <i class="fa-solid fa-address-card fa-lg"></i> New Employee
+        <i class="fa-solid fa-address-card fa-lg"></i> {% trans "New Employee" %}
       </div>
       <div class="card-body">
-        <form method="POST" action="" enctype="multipart/form-data">  <!-- Add enctype attribute here -->
+        <form method="POST" action="" enctype="multipart/form-data">
           {% csrf_token %}
           {{ form.as_p }}
-          <button type="submit" class="btn btn-primary">Add</button>
-          <a href="{% url 'index' %}" class="btn btn-secondary">Cancel</a>
+          <button type="submit" class="btn btn-primary">{% trans "Add" %}</button>
+          <a href="{% url 'index' %}" class="btn btn-secondary">{% trans "Cancel" %}</a>
         </form>
       </div>
     </div>
