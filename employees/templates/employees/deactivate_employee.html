@@ -18,7 +18,7 @@
         <form action="" method="POST">
           {% csrf_token %}
           {{ form }}
-          <button type="submit" class="btn btn-primary mt-3">{% trans "Deactivate" %}</button>
+          <button type="submit" class="btn btn-danger mt-3">{% trans "Deactivate" %}</button>
           <a href="{% url 'active_employees' %}" class="btn btn-secondary mt-3">{% trans "Cancel" %}</a>
         </form>
       </div>

@@ -18,11 +18,11 @@ class EmployeeForm(forms.ModelForm):
             'first_name': _('First Name'),
             'last_name': _('Last Name'),
             'photo': _('Photo'),
-            'hire_date': _('Hire date'),
+            'hire_date': _('Hire Date'),
             'department': _('Department'),
             'position': _('Position'),
             'verification': _('Verification'),
-            'attachment': _('Attachment'),
+            'attachment': _('Employment Contract'),
         }
         widgets = {
             'first_name': forms.TextInput(attrs={'class': 'form-control'}),
@@ -79,10 +79,10 @@ class InternalPermissionForm(forms.ModelForm):
             'employee': _('Employee'),
             'permit_number': _('Permit Number'),
             'permit_issue_date': _('Permit Issue Date'),
-            'permit_expiry_date': _('Permit Expiry Date'),
+            'permit_expiry_date': _('Permit Expiration Date'),
             'description': _('Description'),
             'tag': _('Tag'),
-            'attachment': _('Attachment'),
+            'attachment': _('Documents'),
         }
         widgets = {
             'employee': forms.HiddenInput(),
@@ -103,8 +103,8 @@ class ExternalPermissionForm(forms.ModelForm):
             'employee': _('Employee'),
             'permit_number': _('Permit Number'),
             'permit_issue_date': _('Permit Issue Date'),
-            'permit_expiry_date': _('Permit Expiry Date'),
-            'attachment': _('Attachment'),
+            'permit_expiry_date': _('Permit Expiration Date'),
+            'attachment': _('Documents'),
         }
         widgets = {
             'employee': forms.HiddenInput(),

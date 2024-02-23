@@ -1,10 +1,12 @@
 {% extends 'employees/base.html' %}
 
+{% load i18n %}
+
 {% block body %}
-<h3 class="text-center m-4">Edit Internal Permission</h3>
+<h3 class="text-center m-4"></h3>
 {% if success %}
 <div class="alert alert-success" role="alert">
-  Permission updated successfully!
+  {% trans "Internal Permission updated successfully" %}
   <a href="{% url 'active_employees' %}" class="alert-link">Back to employee list</a>
 </div>
 {% else %}
@@ -12,14 +14,14 @@
   <div class="col-6">
     <div class="card bg-light mb-3">
       <div class="card-header">
-        <i class="fa-solid fa-pen-to-square fa-lg"></i> Update Permission: {{ permission.name }}
+        <i class="fa-solid fa-pen-to-square fa-lg"></i> {% trans "Update Internal Permission" %}
       </div>
       <div class="card-body">
         <form method="POST" action="" enctype="multipart/form-data">  <!-- Add enctype attribute here -->
           {% csrf_token %}
           {{ form.as_p }}
-          <button type="submit" class="btn btn-primary">Update</button>
-          <a href="{% url 'active_employees' %}" class="btn btn-secondary">Cancel</a>
+          <button type="submit" class="btn btn-primary">{% trans "Update" %}</button>
+          <a href="{% url 'active_employees' %}" class="btn btn-secondary">{% trans "Cancel" %}</a>
         </form>
       </div>
     </div>

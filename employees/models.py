@@ -1,8 +1,5 @@
 import uuid
 
-from django.db import models
-from django.core.validators import MinValueValidator
-from datetime import date, timedelta
 from django.utils.translation import gettext_lazy as _
 from PIL import Image
 from django.db import models
@@ -11,10 +8,10 @@ from datetime import timedelta, date
 
 
 class Employee(models.Model):
-    VERIFICATION_ACTIVE = _('A')
-    VERIFICATION_INACTIVE = _('I')
-    VERIFICATION_ACTIVE_NAME = _('Active')
-    VERIFICATION_INACTIVE_NAME = _('Inactive')
+    VERIFICATION_ACTIVE = "A"
+    VERIFICATION_INACTIVE = "I"
+    VERIFICATION_ACTIVE_NAME = "Active"
+    VERIFICATION_INACTIVE_NAME = "Inactive"
 
     VERIFICATION_CHOICES = [
         (VERIFICATION_ACTIVE, VERIFICATION_ACTIVE_NAME),
@@ -132,11 +129,11 @@ class Internal_permission(models.Model):
         today = timezone.now().date()
         six_months_ahead = today + timedelta(days=30 * 6)
         if self.permit_expiry_date < today:
-            return _('expired')
+            return 'expired'
         elif self.permit_expiry_date <= six_months_ahead:
-            return _('expiring')
+            return 'expiring'
         else:
-            return _('active')
+            return 'active'
 
     def __str__(self):
         return f'{self.employee.first_name} {self.employee.last_name} {self.permit_number}'
@@ -159,11 +156,11 @@ class External_permission(models.Model):
         today = timezone.now().date()
         six_months_ahead = today + timedelta(days=30 * 6)
         if self.permit_expiry_date < today:
-            return _('expired')
+            return 'expired'
         elif self.permit_expiry_date <= six_months_ahead:
-            return _('expiring')
+            return 'expiring'
         else:
-            return _('active')
+            return 'active'
 
     def __str__(self):
         return f'{self.employee.first_name} {self.employee.last_name} {self.permit_number}'

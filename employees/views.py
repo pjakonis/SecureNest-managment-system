@@ -1,4 +1,4 @@
-
+from django.http import QueryDict
 from django.shortcuts import render, get_object_or_404, redirect
 from django.views.decorators.http import require_POST
 from django.db.models import Q, Prefetch
@@ -63,10 +63,19 @@ def valid_employees(request):
 @login_required
 def inactive_employees(request):
     search_query = request.GET.get('q', '').strip()
-    sort_by = request.GET.get('sort', 'id')
+    sort_by = request.GET.get('sort', 'first_name')
     order = request.GET.get('order', 'asc')
 
-    employees = Employee.objects.filter(verification=Employee.VERIFICATION_INACTIVE)
+    # Prefetch sorted internal and external permissions
+    internal_permissions_prefetch = Prefetch('internal_permission_set',
+                                             queryset=Internal_permission.objects.order_by('-permit_expiry_date'))
+    external_permissions_prefetch = Prefetch('external_permission_set',
+                                             queryset=External_permission.objects.order_by('-permit_expiry_date'))
+
+    employees = Employee.objects.filter(
+        verification=Employee.VERIFICATION_INACTIVE
+    ).select_related('department').prefetch_related('employee_information', internal_permissions_prefetch,
+                                                    external_permissions_prefetch)
 
     if search_query:
         employees = employees.filter(
@@ -77,8 +86,7 @@ def inactive_employees(request):
         )
 
     if order == 'desc':
-        sort_by = '-' + sort_by
-
+        sort_by = f'-{sort_by}'
     employees = employees.order_by(sort_by)
 
     return render(request, 'employees/inactive_employees.html', {
@@ -338,8 +346,8 @@ def create_invitation(request):
             # Logic to send an email with the new invitation
             try:
                 send_mail(
-                    subject='Your Invitation to Register',
-                    message=f'Please use the following link to register: {invite_link}',
+                    subject='Kvietimas registruotis SecureNest // Invitation to Register at SecureNest',
+                    message=f'Nuoroda registracijai // Please use the following link to register: {invite_link}',
                     from_email=settings.EMAIL_HOST_USER,
                     recipient_list=[email],
                     fail_silently=False,

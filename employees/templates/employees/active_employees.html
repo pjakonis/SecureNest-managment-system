@@ -1,4 +1,11 @@
-{% extends 'employees/base.html' %} {% load i18n %} {% load custom_filters %} {% block body %}
+{% extends 'employees/base.html' %}
+
+{% load i18n %}
+
+{% load custom_filters %}
+
+{% block body %}
+
 <div class="row mt-5">
   <div class="col-12">
     {% if employees %}
@@ -144,13 +151,13 @@
                                         aria-label="{% blocktrans %}Close{% endblocktrans %}"></button>
                               </div>
                               <div class="modal-body">
-                                <p>{% trans "Are you sure you want to deactivate" %} {{ employee.first_name }}
+                                <p>{% trans "Are you sure you want to deactivate employee" %} {{ employee.first_name }}
                                   {{ employee.last_name }}?</p>
                               </div>
                               <div class="modal-footer">
                                 <form action="{% url 'delete' employee.id %}" method="POST">
                                   {% csrf_token %}
-                                  <input type="submit" class="btn btn-danger" value="{% blocktrans %}Make Inactive{% endblocktrans %}"/>
+                                  <input type="submit" class="btn btn-danger" value="{% blocktrans %}Deactivate{% endblocktrans %}"/>
                                   <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">{% trans "Cancel" %}
                                   </button>
                                 </form>
@@ -233,7 +240,7 @@
                                             aria-label="{% blocktrans %}Close{% endblocktrans %}"></button>
                                   </div>
                                   <div class="modal-body">
-                                    <p>{% trans "Are you sure you want to delete this permission?" %}</p>
+                                    <p>{% trans "Are you sure you want to delete permission No." %} {{ permission.permit_number }}?</p>
                                   </div>
                                   <div class="modal-footer">
                                     <form action="{% url 'delete_internal_permission' permission.id %}" method="post">
@@ -300,7 +307,7 @@
                                               aria-label="{% blocktrans %}Close{% endblocktrans %}"></button>
                                     </div>
                                     <div class="modal-body">
-                                      <p>{% trans "Are you sure you want to delete this permission?" %}</p>
+                                      <p>{% trans "Are you sure you want to delete permission No." %} {{ permission.permit_number }}?</p>
                                     </div>
                                     <div class="modal-footer">
                                       <form action="{% url 'delete_external_permission' permission.id %}" method="post">
