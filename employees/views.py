@@ -210,13 +210,29 @@ def reactivate_employee(request, id):
 @login_required
 def index(request):
     today = date.today()
+    six_months_ahead = timezone.now().date() + timedelta(days=30 * 6)
+
     employees_birthday_this_month = Employee_information.objects.filter(
-        date_of_birth__month=today.month
+        date_of_birth__month=today.month,
+        employee__verification=Employee.VERIFICATION_ACTIVE
     ).select_related('employee').order_by('date_of_birth__day')
 
-    # Pass the employees to the template
+    internal_permissions_expiring = Internal_permission.objects.filter(
+        employee__verification=Employee.VERIFICATION_ACTIVE,
+        permit_expiry_date__gte=today,
+        permit_expiry_date__lte=six_months_ahead
+    ).select_related('employee').distinct()
+
+    external_permissions_expiring = External_permission.objects.filter(
+        employee__verification=Employee.VERIFICATION_ACTIVE,
+        permit_expiry_date__gte=today,
+        permit_expiry_date__lte=six_months_ahead
+    ).select_related('employee').distinct()
+
     return render(request, 'employees/index.html', {
-        'employees_birthday_this_month': employees_birthday_this_month
+        'employees_birthday_this_month': employees_birthday_this_month,
+        'internal_permissions_expiring': internal_permissions_expiring,
+        'external_permissions_expiring': external_permissions_expiring,
     })
 
 
