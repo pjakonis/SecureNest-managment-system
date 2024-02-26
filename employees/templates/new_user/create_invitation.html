@@ -14,9 +14,11 @@
                 <form method="POST" action="{% url 'create_invitation' %}">
                     {% csrf_token %}
                     <div class="form-group">
-                        <input type="email" class="form-control" id="emailInput" name="email" placeholder="{% blocktrans %}Enter email{% endblocktrans %}" required>
+                        <input type="email" class="form-control mt-1" id="emailInput" name="email" placeholder="{% blocktrans %}Enter email{% endblocktrans %}" required>
                     </div>
-                    <button type="submit" class="btn btn-primary mt-2">{% trans "Send Invitation" %}</button>
+                    <div class="d-flex justify-content-center">
+                        <button type="submit" class="btn btn-primary mt-3">{% trans "Send Invitation" %}</button>
+                    </div>
                 </form>
             </div>
         </div>

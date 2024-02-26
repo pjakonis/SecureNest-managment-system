@@ -118,8 +118,8 @@ class Internal_permission(models.Model):
 
     employee = models.ForeignKey(Employee, on_delete=models.CASCADE, verbose_name=_('Employee'))
     permit_number = models.CharField(max_length=10, unique=True, null=True, blank=True, verbose_name=_('Permit number'))
-    permit_issue_date = models.DateField(null=True, blank=True, verbose_name=_('Permit issue date'))
-    permit_expiry_date = models.DateField(null=True, blank=True, verbose_name=_('Permit expiry date'))
+    permit_issue_date = models.DateField(verbose_name=_('Permit issue date'))
+    permit_expiry_date = models.DateField(verbose_name=_('Permit expiry date'))
     description = models.TextField(max_length=255, null=True, blank=True, verbose_name=_('Description'))
     tag = models.CharField(max_length=2, choices=TAG_CHOICES, default=TAG_REJECTED, verbose_name=_('Tag'))
     attachment = models.FileField(upload_to='internal_permissions/', null=True, blank=True, verbose_name=_('Attachment'))
@@ -147,8 +147,8 @@ class Internal_permission(models.Model):
 class External_permission(models.Model):
     employee = models.ForeignKey(Employee, on_delete=models.CASCADE, verbose_name=_('Employee'))
     permit_number = models.CharField(max_length=10, unique=True, null=True, blank=True, verbose_name=_('Permit number'))
-    permit_issue_date = models.DateField(null=True, blank=True, verbose_name=_('Permit issue date'))
-    permit_expiry_date = models.DateField(null=True, blank=True, verbose_name=_('Permit expiry date'))
+    permit_issue_date = models.DateField(verbose_name=_('Permit issue date'))
+    permit_expiry_date = models.DateField(verbose_name=_('Permit expiry date'))
     attachment = models.FileField(upload_to='external_permissions/', null=True, blank=True, verbose_name=_('Attachment'))
 
     @property

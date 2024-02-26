@@ -6,7 +6,7 @@
 
 {% load i18n %}
 
-<div class="row mt-5">
+<div class="row mt-4">
   <div class="col-12">
     {% if employees %}
     <div class="card bg-light ms-4 me-4 mb-4">
@@ -56,7 +56,7 @@
             </thead>
             <tbody>
             {% for employee in employees %}
-            <tr>
+            <tr onclick="window.location='{% url 'employee_profile' employee.id %}';" style="cursor:pointer;">
               <td class="align-middle text-center">
                 <img src="{{ employee.photo.url|default:'url_to_default_photo' }}" alt="{{ employee.first_name }}"
                      class="img-fluid rounded-circle" style="width: 50px; height: 50px; object-fit: cover;">
@@ -65,7 +65,7 @@
               <td class="align-middle">{{ employee.last_name }}</td>
               <td class="align-middle">{{ employee.department }}</td>
               <td class="align-middle">{{ employee.deactivationlog.deactivation_date }}</td>
-              <td class="align-middle">
+              <td class="align-middle" onclick="event.stopPropagation();">
                 <button type="button" class="btn btn-info me-1" data-bs-toggle="modal"
                         data-bs-target="#myModal{{employee.id}}">
                   <i class="fa-solid fa-circle-info fa-lg"></i>

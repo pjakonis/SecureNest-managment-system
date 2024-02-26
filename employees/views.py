@@ -418,3 +418,10 @@ def register(request):
 
     # Handle GET request with token for initial registration page load
     return render(request, 'new_user/register.html', {'token': token})
+
+
+@login_required
+def employee_profile(request, id):
+    employee = get_object_or_404(Employee, pk=id)
+    # Assuming you have reverse relations set up or use related_name in models
+    return render(request, 'employees/employee_profile.html', {'employee': employee})

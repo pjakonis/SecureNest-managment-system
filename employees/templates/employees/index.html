@@ -3,172 +3,103 @@
 {% block body %}
 
 {% load i18n %}
-
-<div class="container mt-4">
-  <!-- Internal Permissions Expiring Card -->
-  <div class="row mt-2">
-    <div class="col-md-12">
-      <div class="card bg-light mb-4">
-        <div class="card-header">
-          <i class="fa-regular fa-square-check" style="color: #37b281;"></i> {% trans "Active Employees with Internal Permissions Expiring Soon" %}
-        </div>
-        <div class="card-body">
-          <div class="table-responsive">
-            <table class="table table-hover">
-              <thead>
+<div>
+  <div class="row">
+    <!-- Internal Permissions Expiring Card -->
+    <div class="col-lg-6 mt-4">
+      <div class="col-md-12">
+        <div class="card bg-light mb-4">
+          <div class="card-header">
+            <i class="fa-solid fa-clock-rotate-left " style="color: #F0BA67;"></i> {% trans "Internal Permissions Expiring Soon" %}
+          </div>
+          <div class="card-body">
+            <div class="table-responsive">
+              <table class="table table-hover">
+                <thead>
                 <tr>
-                  <th></th>
                   <th>{% trans "First Name" %}</th>
                   <th>{% trans "Last Name" %}</th>
                   <th>{% trans "Permit Number" %}</th>
                   <th>{% trans "Permit Expiration Date" %}</th>
-                  <th>Action</th>
                 </tr>
-              </thead>
-              <tbody>
+                </thead>
+                <tbody>
                 {% for permission in internal_permissions_expiring %}
-                <tr>
-                  <td class="align-middle text-center">
-                    <img src="{{ permission.employee.photo.url }}" alt="{{ permission.employee.first_name }}"
-                         class="img-fluid rounded-circle" style="width: 50px; height: 50px; object-fit: cover;">
-                  </td>
+                <tr onclick="window.location='{% url 'employee_profile' permission.employee.id %}';" style="cursor:pointer;">
                   <td class="align-middle">{{ permission.employee.first_name }}</td>
                   <td class="align-middle">{{ permission.employee.last_name }}</td>
                   <td class="align-middle">{{ permission.permit_number }}</td>
-                  <td class="align-middle">{{ permission.permit_expiry_date|date:"Y-m-d" }}</td>
-                  <td class="align-middle">
-                    <!-- Action Button with Modal for Internal Permissions -->
-                    <button type="button" class="btn btn-info me-1" data-bs-toggle="modal" data-bs-target="#internalModal{{permission.id}}">
-                      <i class="fa-solid fa-circle-info fa-lg"></i>
-                    </button>
-                    <!-- Modal Structure for Internal Permissions -->
-                    <div class="modal fade" id="internalModal{{permission.id}}" tabindex="-1" aria-labelledby="internalModalLabel{{permission.id}}" aria-hidden="true">
-                      <div class="modal-dialog">
-                        <div class="modal-content">
-                          <div class="modal-header">
-                            <h5 class="modal-title" id="internalModalLabel{{permission.id}}">{{ permission.employee.first_name }} {{ permission.employee.last_name }} - Internal Permission Details</h5>
-                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                          </div>
-                          <div class="modal-body">
-                            <!-- Content for Internal Permissions Modal Body -->
-                            <p>Permit Number: {{ permission.permit_number }}</p>
-                            <p>Expiration Date: {{ permission.permit_expiry_date|date:"Y-m-d" }}</p>
-                            <!-- Add more details as needed -->
-                          </div>
-                          <div class="modal-footer">
-                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                          </div>
-                        </div>
-                      </div>
-                    </div>
-                  </td>
+                  <td class="align-middle">{{ permission.permit_expiry_date }}</td>
                 </tr>
                 {% endfor %}
-              </tbody>
-            </table>
+                </tbody>
+              </table>
+            </div>
           </div>
         </div>
       </div>
     </div>
-  </div>
 
-  <!-- External Permissions Expiring Card -->
-  <div class="row mt-2">
-    <div class="col-md-12">
-      <div class="card bg-light mb-4">
-        <div class="card-header">
-          <i class="fa-regular fa-square-check" style="color: #37b281;"></i> {% trans "Active Employees with External Permissions Expiring Soon" %}
-        </div>
-        <div class="card-body">
-          <div class="table-responsive">
-            <table class="table table-hover">
-              <thead>
+    <!-- External Permissions Expiring Card -->
+    <div class="col-lg-6 mt-4">
+      <div class="col-md-12">
+        <div class="card bg-light mb-4">
+          <div class="card-header">
+            <i class="fa-solid fa-clock-rotate-left " style="color: #F0BA67;"></i> {% trans "External Permissions Expiring Soon" %}
+          </div>
+          <div class="card-body">
+            <div class="table-responsive">
+              <table class="table table-hover">
+                <thead>
                 <tr>
-                  <th></th>
                   <th>{% trans "First Name" %}</th>
                   <th>{% trans "Last Name" %}</th>
                   <th>{% trans "Permit Number" %}</th>
                   <th>{% trans "Permit Expiration Date" %}</th>
-                  <th>Action</th>
                 </tr>
-              </thead>
-              <tbody>
+                </thead>
+                <tbody>
                 {% for permission in external_permissions_expiring %}
-                <tr>
-                  <td class="align-middle text-center">
-                    <img src="{{ permission.employee.photo.url }}" alt="{{ permission.employee.first_name }}"
-                         class="img-fluid rounded-circle" style="width: 50px; height: 50px; object-fit: cover;">
-                  </td>
+               <tr onclick="window.location='{% url 'employee_profile' permission.employee.id %}';" style="cursor:pointer;">
                   <td class="align-middle">{{ permission.employee.first_name }}</td>
                   <td class="align-middle">{{ permission.employee.last_name }}</td>
                   <td class="align-middle">{{ permission.permit_number }}</td>
-                  <td class="align-middle">{{ permission.permit_expiry_date|date:"Y-m-d" }}</td>
-                  <td class="align-middle">
-                    <!-- Action Button with Modal for External Permissions -->
-                    <button type="button" class="btn btn-info me-1" data-bs-toggle="modal" data-bs-target="#externalModal{{permission.id}}">
-                      <i class="fa-solid fa-circle-info fa-lg"></i>
-                    </button>
-                    <!-- Modal Structure for External Permissions -->
-                    <div class="modal fade" id="externalModal{{permission.id}}" tabindex="-1" aria-labelledby="externalModalLabel{{permission.id}}" aria-hidden="true">
-                      <div class="modal-dialog">
-                        <div class="modal-content">
-                          <div class="modal-header">
-                            <h5 class="modal-title" id="externalModalLabel{{permission.id}}">{{ permission.employee.first_name }} {{ permission.employee.last_name }} - External Permission Details</h5>
-                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                          </div>
-                          <div class="modal-body">
-                            <!-- Content for External Permissions Modal Body -->
-                            <p>Permit Number: {{ permission.permit_number }}</p>
-                            <p>Expiration Date: {{ permission.permit_expiry_date|date:"Y-m-d" }}</p>
-                            <!-- Add more details as needed -->
-                          </div>
-                          <div class="modal-footer">
-                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                          </div>
-                        </div>
-                      </div>
-                    </div>
-                  </td>
+                  <td class="align-middle">{{ permission.permit_expiry_date }}</td>
                 </tr>
                 {% endfor %}
-              </tbody>
-            </table>
+                </tbody>
+              </table>
+            </div>
           </div>
         </div>
       </div>
     </div>
-  </div>
 
-
-  <div class="row mt-2">
-    <div class="col-md-12">
-      {% if employees_birthday_this_month %}
-      <div class="card bg-light mb-4">
-        <div class="card-header">
-          <i class="fa-solid fa-cake-candles" style="color: #d82c34;"></i> {% trans "Employees with birthdays this month" %}
-        </div>
-        <div class="card-body">
-          <div class="table-responsive">
-            <table class="table table-hover">
-              <thead>
+    <!-- Employees with Birthdays This Month Card -->
+    <div class="col-lg-6 mt-1">
+      <div class="col-md-12">
+        {% if employees_birthday_this_month %}
+        <div class="card bg-light mb-4">
+          <div class="card-header">
+            <i class="fa-solid fa-cake-candles" style="color: #d82c34;"></i> {% trans "Employees with birthdays this month" %}
+          </div>
+          <div class="card-body">
+            <div class="table-responsive">
+              <table class="table table-hover">
+                <thead>
                 <tr>
-                  <th></th>
                   <th>{% trans "Name" %}</th>
                   <th>{% trans "Date of Birth" %}</th>
-                  <th>Action</th>
+                  <th></th>
                 </tr>
-              </thead>
-              <tbody>
+                </thead>
+                <tbody>
                 {% for employee_info in employees_birthday_this_month %}
-                <tr>
-                  <td class="align-middle text-center">
-                    <img src="{{ employee_info.employee.photo.url|default:'url_to_default_photo' }}"
-                         alt="{{ employee_info.employee.first_name }}"
-                         class="img-fluid rounded-circle" style="width: 50px; height: 50px; object-fit: cover;">
-                  </td>
+                <tr onclick="window.location='{% url 'employee_profile' employee_info.employee.id %}';" style="cursor:pointer;">
+
                   <td class="align-middle">{{ employee_info.employee.first_name }} {{ employee_info.employee.last_name }}</td>
-                  <td class="align-middle">{{ employee_info.date_of_birth|date:"Y-m-d" }}</td>
-                  <td class="align-middle">
+                  <td class="align-middle">{{ employee_info.date_of_birth }}</td>
+                  <td class="align-middle" onclick="event.stopPropagation();">
                     <button type="button" class="btn btn-info me-1" data-bs-toggle="modal" data-bs-target="#infoModalBirthday{{employee_info.employee.id}}">
                       <i class="fa-solid fa-circle-info fa-lg"></i>
                     </button>
@@ -193,16 +124,8 @@
                                 <table class="table">
                                   <tbody>
                                   <tr>
-                                    <th scope="row">{% trans "First Name" %}</th>
-                                    <td>{{ employee_info.employee.first_name }}</td>
-                                  </tr>
-                                  <tr>
-                                    <th scope="row">{% trans "Last Name" %}</th>
-                                    <td>{{ employee_info.employee.last_name }}</td>
-                                  </tr>
-                                  <tr>
                                     <th scope="row">{% trans "Date of Birth" %}</th>
-                                    <td>{{ employee_info.date_of_birth|date:"Y-m-d" }}</td>
+                                    <td>{{ employee_info.date_of_birth }}</td>
                                   </tr>
                                   <tr>
                                     <th scope="row">{% trans "Department" %}</th>
@@ -235,14 +158,15 @@
                   </td>
                 </tr>
                 {% endfor %}
-              </tbody>
-            </table>
+                </tbody>
+              </table>
+            </div>
           </div>
         </div>
+        {% else %}
+        <p>{% trans "No birthdays this month." %}</p>
+        {% endif %}
       </div>
-      {% else %}
-      <p>{% trans "No birthdays this month." %}</p>
-      {% endif %}
     </div>
   </div>
 </div>

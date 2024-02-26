@@ -1,0 +1,396 @@
+{% extends 'employees/base.html' %}
+
+{% load i18n %}
+{% load static %}
+{% load custom_filters %}
+
+{% block body %}
+<!-- Start your project here-->
+<section style="background-color: #eee;">
+  <div class="container py-4">
+    <div class="row">
+      <div class="col">
+      </div>
+    </div>
+
+    <div class="row">
+      <div class="col-lg-4">
+        <div class="card mb-4">
+          <div class="card-body text-center">
+            <img src="{{ employee.photo.url|default:'url_to_default_photo' }}" alt="{{ employee.first_name }}"
+                 class="img-fluid rounded-circle" style="width: 150px; height: 150px; object-fit: cover;">
+            <h5 class="my-3 mb-1">{{ employee.first_name }} {{ employee.last_name }}</h5>
+            <p class="text-muted mb-0">{{ employee.position.name }}</p>
+            <p class="text-muted mb-3">{{ employee.department.name }}</p>
+            <div class="d-flex justify-content-center mb-2">
+              <a class="btn btn-warning" href="{% url 'edit_employee' employee.id %}">
+                {% trans "Update" %}</a>
+              {% if employee.verification == employee.VERIFICATION_ACTIVE %}
+              <button type="button" class="btn btn-danger ms-1" data-bs-toggle="modal"
+                      data-bs-target="#deleteModal{{employee.id}}"> {% trans "Deactivate" %}
+              </button>
+              <div class="modal" id="deleteModal{{employee.id}}" tabindex="-1" aria-labelledby="modalLabel2"
+                   aria-hidden="true">
+                <div class="modal-dialog modal-dialog-centered" role="document">
+                  <div class="modal-content">
+                    <div class="modal-header">
+                      <h5 class="modal-title">
+                        {{ employee.first_name }} {{ employee.last_name }}
+                      </h5>
+                      <button type="button" class="btn-close" data-bs-dismiss="modal"
+                              aria-label="{% blocktrans %}Close{% endblocktrans %}"></button>
+                    </div>
+                    <div class="modal-body">
+                      <p class="text-start">
+                        {% trans "Are you sure you want to deactivate employee" %}
+                        <br>
+                        {{ employee.first_name }} {{ employee.last_name }}?
+                      </p>
+                    </div>
+                    <div class="modal-footer">
+                      <form action="{% url 'delete' employee.id %}" method="POST">
+                        {% csrf_token %}
+                        <input type="submit" class="btn btn-danger"
+                               value="{% blocktrans %}Deactivate{% endblocktrans %}"/>
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">{% trans "Cancel" %}
+                        </button>
+                      </form>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              {% else %}
+              <button type="button" class="btn btn-success ms-1" data-bs-toggle="modal"
+                      data-bs-target="#reactivateModal{{employee.id}}">{% trans "Reactivate" %}
+              </button>
+              <div class="modal" id="reactivateModal{{employee.id}}" tabindex="-1"
+                   aria-labelledby="modalLabel{{employee.id}}" aria-hidden="true">
+                <div class="modal-dialog" role="document">
+                  <div class="modal-content">
+                    <div class="modal-header">
+                      <h5 class="modal-title">{% trans "Reactivate Employee" %}</h5>
+                      <button type="button" class="btn-close" data-bs-dismiss="modal"
+                              aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+                      <p class="text-start">{% trans "Are you sure you want to reactivate" %}
+                        <br>
+                        {{ employee.first_name }} {{ employee.last_name }}?
+                      </p>
+                    </div>
+                    <div class="modal-footer">
+                      <form action="{% url 'reactivate_employee' employee.id %}" method="post">
+                        {% csrf_token %}
+                        <input type="submit" class="btn btn-success"
+                               value="{% blocktrans %}Reactivate{% endblocktrans %}"/>
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">{% trans "Cancel" %}
+                        </button>
+                      </form>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              {% endif %}
+            </div>
+            {% if employee.verification == employee.VERIFICATION_INACTIVE %}
+            <div class="d-flex justify-content-center mb-2">
+              <button type="button" class="btn btn-danger" data-bs-toggle="modal"
+                      data-bs-target="#deleteModal{{employee.id}}">
+                {% trans "Delete Permanently" %}
+              </button>
+              <div class="modal" id="deleteModal{{employee.id}}" tabindex="-1"
+                   aria-labelledby="modalLabel3{{employee.id}}" aria-hidden="true">
+                <div class="modal-dialog" role="document">
+                  <div class="modal-content">
+                    <div class="modal-header">
+                      <h5 class="modal-title" id="modalLabel3{{employee.id}}">
+                        {% trans "Delete Employee Permanently" %}</h5>
+                      <button type="button" class="btn-close" data-bs-dismiss="modal"
+                              aria-label="{% blocktrans %}Close{% endblocktrans %}"></button>
+                    </div>
+                    <div class="modal-body">
+                      <p class="text-start">
+                        {% trans "Are you sure you want to delete" %}
+                        {{ employee.first_name }} {{ employee.last_name }} {% trans "permanently" %}?
+                        <br>
+                        <br>
+                        {% trans "This action cannot be undone." %}
+                      </p>
+                    </div>
+                    <div class="modal-footer">
+                      <form action="{% url 'delete_employee_permanently' employee.id %}" method="POST">
+                        {% csrf_token %}
+                        <input type="submit" class="btn btn-danger"
+                               value="{% blocktrans %}Delete Permanently{% endblocktrans %}"/>
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">{% trans "Cancel" %}
+                        </button>
+                      </form>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            {% endif %}
+          </div>
+        </div>
+      </div>
+      <div class="col-lg-8">
+        <div class="card mb-4">
+          <div class="card-body">
+            {% if employee.verification == employee.VERIFICATION_INACTIVE %}
+            <div class="row bg-danger text-white">
+              <div class="col-sm-3">
+                <p class="mb-0">{% trans "Reason for Deactivation" %}</p>
+              </div>
+              <div class="col-sm-9">
+                <p class="mb-0">{{ employee.deactivationlog.comments }}</p>
+              </div>
+            </div>
+            <hr>
+            {% endif %}
+            <div class="row">
+              <div class="col-sm-3">
+                <p class="mb-0">{% trans "Full Name" %}</p>
+              </div>
+              <div class="col-sm-9">
+                <p class="text-muted mb-0">{{ employee.first_name }} {{ employee.last_name }}</p>
+              </div>
+            </div>
+            <hr>
+            <div class="row">
+              <div class="col-sm-3">
+                <p class="mb-0">{% trans "Email" %}</p>
+              </div>
+              <div class="col-sm-9">
+                <p class="text-muted mb-0">{{ employee.employee_information.email }}</p>
+              </div>
+            </div>
+            <hr>
+            <div class="row">
+              <div class="col-sm-3">
+                <p class="mb-0">{% trans "Phone" %}</p>
+              </div>
+              <div class="col-sm-9">
+                <p class="text-muted mb-0">{{ employee.employee_information.phone_number }}</p>
+              </div>
+            </div>
+            <hr>
+            <div class="row">
+              <div class="col-sm-3">
+                <p class="mb-0">{% trans "Address" %}</p>
+              </div>
+              <div class="col-sm-9">
+                <p class="text-muted mb-0">{{ employee.employee_information.address }}</p>
+              </div>
+            </div>
+            <hr>
+            <div class="row">
+              <div class="col-sm-3">
+                <p class="mb-0">{% trans "Contract" %}</p>
+              </div>
+              <div class="col-sm-9">
+                <p class="text-muted mb-0">
+                  {% if employee.attachment %}
+                  <a href="{{ employee.attachment.url }}" target="_blank">
+                    {{ employee.attachment.name|filename }}</a>
+                  {% else %}
+                  {% trans "No file attached" %}
+                  {% endif %}
+                </p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="col-lg-12">
+        <div class="row">
+          <div class="col-md-12 mb-4">
+            <div class="card mb-4 mb-md-0">
+              <div class="card-body">
+                <p class="mb-3 d-flex align-items-center">
+                  <span class="text-primary font-italic me-1"></span>{% trans "Internal Permissions" %}
+                  <a href="{% url 'add_internal_permission' employee.id %}" class="btn btn-outline-primary ms-auto">
+                    <i class="fa-solid fa-plus fa-lg"></i>
+                    {% trans "Add Internal Permission" %}
+                  </a>
+                </p>
+                <table class="table">
+                  <thead>
+                  <tr class="table">
+                    <th class="align-middle">{% trans "Permit Number" %}</th>
+                    <th class="align-middle">{% trans "Permit Issue Date" %}</th>
+                    <th class="align-middle">{% trans "Permit Expiration Date" %}</th>
+                    <th class="align-middle">{% trans "Description" %}</th>
+                    <th class="align-middle">{% trans "Tag" %}</th>
+                    <th class="align-middle">{% trans "File" %}</th>
+                    <th style="width: 120px;"></th>
+                  </tr>
+                  </thead>
+                  <tbody>
+                  {% for permission in employee.internal_permission_set.all %}
+                  {% with status=permission.is_expiring_or_expired %}
+                  <tr class="{% if status == 'expired' %}table-danger{% elif status == 'expiring' %}table-warning{% else %}table-success{% endif %}">
+                    <td class="align-middle">{{ permission.permit_number }}</td>
+                    <td class="align-middle">{{ permission.permit_issue_date }}</td>
+                    <td class="align-middle">{{ permission.permit_expiry_date }}</td>
+                    <td class="align-middle">{{ permission.description }}</td>
+                    <td class="align-middle">{{ permission.tag }}</td>
+                    <td class="align-middle">
+                      {% if permission.attachment %}
+                      <a href="{{ permission.attachment.url }}" target="_blank"><i
+                              class="fa-regular fa-file fa-lg"></i></a>
+                      {% else %}
+                      <i class="fa-solid fa-file-excel fa-lg"></i>
+                      {% endif %}
+                    </td>
+                    <td>
+                      <a href="{% url 'edit_internal_permission' permission.id %}"
+                         class="btn btn-primary btn-sm">
+                        <i class="fa-solid fa-pen-to-square"></i>
+                      </a>
+                      <!-- Wrap the button in a form for the POST request -->
+                      <form action="{% url 'delete_internal_permission' permission.id %}" method="post"
+                            style="display: inline-block;">
+                        {% csrf_token %}
+                        <button type="button" class="btn btn-danger btn-sm" data-bs-toggle="modal"
+                                data-bs-target="#deleteInternalModal{{permission.id}}">
+                          <i class="fa-solid fa-trash"></i>
+                        </button>
+                      </form>
+                    </td>
+                    <div class="modal fade" id="deleteInternalModal{{permission.id}}" tabindex="-1"
+                         role="dialog" aria-labelledby="deleteInternalModalLabel{{permission.id}}"
+                         aria-hidden="true">
+                      <div class="modal-dialog modal-dialog-centered" role="document">
+                        <div class="modal-content">
+                          <div class="modal-header">
+                            <h5 class="modal-title" id="deleteInternalModalLabel{{permission.id}}">
+                              {% trans "Delete Internal Permission" %}</h5>
+                            <button type="button" class="btn-close" data-bs-dismiss="modal"
+                                    aria-label="{% blocktrans %}Close{% endblocktrans %}"></button>
+                          </div>
+                          <div class="modal-body">
+                            <p>{% trans "Are you sure you want to delete permission" %}
+                              <br>
+                               {% trans "No" %}. {{ permission.permit_number }}?</p>
+                          </div>
+                          <div class="modal-footer">
+                            <form action="{% url 'delete_internal_permission' permission.id %}" method="post">
+                              {% csrf_token %}
+                              <input type="submit" class="btn btn-danger"
+                                     value="{% blocktrans %}Delete{% endblocktrans %}"/>
+                              <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
+                                {% trans "Cancel" %}
+                              </button>
+                            </form>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </tr>
+                  {% endwith %}
+                  {% endfor %}
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          </div>
+          <div class="col-md-12">
+            <div class="card mb-4 mb-md-0">
+              <div class="card-body">
+                <p class="mb-3 d-flex align-items-center">
+                  <span class="text-primary font-italic me-1"></span>{% trans "External Permissions" %}
+                  <a href="{% url 'add_external_permission' employee.id %}" class="btn btn-outline-primary ms-auto">
+                    <i class="fa-solid fa-plus fa-lg"></i>
+                    {% trans "Add External Permission" %}
+                  </a>
+                </p>
+                <table class="table">
+                  <thead>
+                  <tr class="table">
+                    <th class="align-middle">{% trans "Permit Number" %}</th>
+                    <th class="align-middle">{% trans "Permit Issue Date" %}</th>
+                    <th class="align-middle">{% trans "Permit Expiration Date" %}</th>
+                    <th class="align-middle">{% trans "File" %}</th>
+                    <th class="align-middle">{% trans "Actions" %}</th>
+                  </tr>
+                  </thead>
+                  <tbody>
+                  {% for permission in employee.external_permission_set.all %}
+                  {% with status=permission.is_expiring_or_expired %}
+                  <tr class="{% if status == 'expired' %}table-danger{% elif status == 'expiring' %}table-warning{% else %}table-success{% endif %}">
+                    <td class="align-middle">{{ permission.permit_number }}</td>
+                    <td class="align-middle">{{ permission.permit_issue_date }}</td>
+                    <td class="align-middle">{{ permission.permit_expiry_date }}</td>
+                    <td class="align-middle">
+                      {% if permission.attachment %}
+                      <a href="{{ permission.attachment.url }}" target="_blank"><i
+                              class="fa-regular fa-file fa-lg"></i></a>
+                      {% else %}
+                      <i class="fa-solid fa-file-excel fa-lg"></i>
+                      {% endif %}
+                    </td>
+                    <td>
+                      <a href="{% url 'edit_external_permission' permission.id %}"
+                         class="btn btn-primary btn-sm"><i class="fa-solid fa-pen-to-square"></i></a>
+                      <form action="{% url 'delete_internal_permission' permission.id %}" method="post"
+                            style="display: inline-block;">
+                        {% csrf_token %}
+                        <button type="button" class="btn btn-danger btn-sm" data-bs-toggle="modal"
+                                data-bs-target="#deleteExternalModal{{permission.id}}">
+                          <i class="fa-solid fa-trash"></i>
+                        </button>
+                      </form>
+                      <div class="modal fade" id="deleteExternalModal{{permission.id}}" tabindex="-1"
+                           role="dialog" aria-labelledby="deleteExternalModalLabel{{permission.id}}"
+                           aria-hidden="true">
+                        <div class="modal-dialog modal-dialog-centered" role="document">
+                          <div class="modal-content">
+                            <div class="modal-header">
+                              <h5 class="modal-title" id="deleteExternalModalLabel{{permission.id}}">
+                                {% trans "Delete External Permission" %}</h5>
+                              <button type="button" class="btn-close" data-bs-dismiss="modal"
+                                      aria-label="{% blocktrans %}Close{% endblocktrans %}"></button>
+                            </div>
+                            <div class="modal-body">
+                              <p>{% trans "Are you sure you want to delete permission" %}
+                                <br>
+                                {% trans "No" %}. {{ permission.permit_number }}?
+                              </p>
+                            </div>
+                            <div class="modal-footer">
+                              <form action="{% url 'delete_external_permission' permission.id %}" method="post">
+                                {% csrf_token %}
+                                <input type="submit" class="btn btn-danger"
+                                       value="{% blocktrans %}Delete{% endblocktrans %}"/>
+                                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
+                                  {% trans "Cancel" %}
+                                </button>
+                              </form>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </td>
+                  </tr>
+                  {% endwith %}
+                  {% endfor %}
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+<!-- End your project here-->
+
+<!-- MDB -->
+<script type="text/javascript" src="js/mdb.min.js"></script>
+<!-- Custom scripts -->
+<script type="text/javascript"></script>
+
+{% endblock %}
+

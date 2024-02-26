@@ -8,8 +8,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: \n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-02-23 21:42+0200\n"
-"PO-Revision-Date: 2024-02-23 21:43+0200\n"
+"POT-Creation-Date: 2024-02-25 14:37+0200\n"
+"PO-Revision-Date: 2024-02-25 14:37+0200\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "Language: lt\n"
@@ -28,6 +28,7 @@ msgstr "Įdarbinimo data"
 #: templates/employees/active_employees.html:367
 #: templates/employees/inactive_employees.html:37
 #: templates/employees/inactive_employees.html:404
+#: templates/employees/index.html:20 templates/employees/index.html:55
 msgid "First Name"
 msgstr "Vardas"
 
@@ -35,6 +36,7 @@ msgstr "Vardas"
 #: templates/employees/active_employees.html:368
 #: templates/employees/inactive_employees.html:42
 #: templates/employees/inactive_employees.html:405
+#: templates/employees/index.html:21 templates/employees/index.html:56
 msgid "Last Name"
 msgstr "Pavardė"
 
@@ -53,6 +55,7 @@ msgstr "Įdarbinimo diena"
 #: templates/employees/inactive_employees.html:47
 #: templates/employees/inactive_employees.html:106
 #: templates/employees/inactive_employees.html:406
+#: templates/employees/index.html:131
 msgid "Department"
 msgstr "Skyrius"
 
@@ -61,6 +64,7 @@ msgstr "Skyrius"
 #: templates/employees/active_employees.html:102
 #: templates/employees/active_employees.html:370
 #: templates/employees/inactive_employees.html:109
+#: templates/employees/index.html:135
 msgid "Position"
 msgstr "Pareigos"
 
@@ -68,19 +72,21 @@ msgstr "Pareigos"
 msgid "Verification"
 msgstr "Veiklumas"
 
-#: forms.py:25
+#: forms.py:25 templates/employees/active_employees.html:122
 msgid "Employment Contract"
 msgstr "Darbo sutartis"
 
 #: forms.py:44 templates/employees/active_employees.html:106
 #: templates/employees/inactive_employees.html:113
-#: templates/employees/index.html:24
+#: templates/employees/index.html:92 templates/employees/index.html:127
 msgid "Date of Birth"
 msgstr "Gimimo data"
 
 #: forms.py:45 models.py:62 models.py:184
 #: templates/employees/active_employees.html:110
+#: templates/employees/employee_profile.html:162
 #: templates/employees/inactive_employees.html:117
+#: templates/employees/index.html:139
 msgid "Email"
 msgstr "El. paštas"
 
@@ -90,6 +96,7 @@ msgid "Phone Number"
 msgstr "Telefono numeris"
 
 #: forms.py:47 models.py:64 templates/employees/active_employees.html:118
+#: templates/employees/employee_profile.html:180
 #: templates/employees/inactive_employees.html:125
 msgid "Address"
 msgstr "Adresas"
@@ -110,13 +117,18 @@ msgstr "Komentarai"
 
 #: forms.py:80 forms.py:104 templates/employees/active_employees.html:191
 #: templates/employees/active_employees.html:266
+#: templates/employees/employee_profile.html:220
+#: templates/employees/employee_profile.html:311
 #: templates/employees/inactive_employees.html:223
 #: templates/employees/inactive_employees.html:300
+#: templates/employees/index.html:22 templates/employees/index.html:57
 msgid "Permit Number"
 msgstr "Leidimo numeris"
 
 #: forms.py:81 forms.py:105 templates/employees/active_employees.html:192
 #: templates/employees/active_employees.html:267
+#: templates/employees/employee_profile.html:221
+#: templates/employees/employee_profile.html:312
 #: templates/employees/inactive_employees.html:224
 #: templates/employees/inactive_employees.html:301
 msgid "Permit Issue Date"
@@ -124,17 +136,22 @@ msgstr "Leidimo išdavimo data"
 
 #: forms.py:82 forms.py:106 templates/employees/active_employees.html:193
 #: templates/employees/active_employees.html:268
+#: templates/employees/employee_profile.html:222
+#: templates/employees/employee_profile.html:313
 #: templates/employees/inactive_employees.html:225
 #: templates/employees/inactive_employees.html:302
+#: templates/employees/index.html:23 templates/employees/index.html:58
 msgid "Permit Expiration Date"
 msgstr "Leidimo galiojimo pabaiga"
 
 #: forms.py:83 models.py:123 templates/employees/active_employees.html:194
+#: templates/employees/employee_profile.html:223
 #: templates/employees/inactive_employees.html:226
 msgid "Description"
 msgstr "Komentarai"
 
 #: forms.py:84 models.py:124 templates/employees/active_employees.html:195
+#: templates/employees/employee_profile.html:224
 #: templates/employees/inactive_employees.html:227
 msgid "Tag"
 msgstr "Žyma"
@@ -171,7 +188,7 @@ msgstr "Telefono numeris"
 msgid "Employee information"
 msgstr "Darbuotojo informacija"
 
-#: models.py:79 models.py:91 templates/employees/index.html:23
+#: models.py:79 models.py:91 templates/employees/index.html:91
 msgid "Name"
 msgstr "Vardas"
 
@@ -286,6 +303,10 @@ msgstr "Paieška"
 #: templates/employees/active_employees.html:184
 #: templates/employees/active_employees.html:240
 #: templates/employees/active_employees.html:307
+#: templates/employees/employee_profile.html:41
+#: templates/employees/employee_profile.html:109
+#: templates/employees/employee_profile.html:270
+#: templates/employees/employee_profile.html:353
 #: templates/employees/inactive_employees.html:83
 #: templates/employees/inactive_employees.html:183
 #: templates/employees/inactive_employees.html:216
@@ -294,17 +315,15 @@ msgstr "Paieška"
 msgid "Close"
 msgstr "Uždaryti"
 
-#: templates/employees/active_employees.html:122
-msgid "City"
-msgstr "Miestas"
-
 #: templates/employees/active_employees.html:127
+#: templates/employees/employee_profile.html:197
 #: templates/employees/inactive_employees.html:134
 msgid "No file attached"
 msgstr "Failas nepridėtas"
 
 #: templates/employees/active_employees.html:137
 #: templates/employees/edit.html:22
+#: templates/employees/employee_profile.html:27
 #: templates/employees/external_permission_edit_template.html:21
 #: templates/employees/internal_permission_edit_template.html:23
 msgid "Update"
@@ -313,10 +332,14 @@ msgstr "Atnaujinti"
 #: templates/employees/active_employees.html:140
 #: templates/employees/active_employees.html:160
 #: templates/employees/deactivate_employee.html:21
+#: templates/employees/employee_profile.html:30
+#: templates/employees/employee_profile.html:54
+#: templates/employees/employee_profile_copy.html:79
 msgid "Deactivate"
 msgstr "Deaktyvuoti"
 
 #: templates/employees/active_employees.html:154
+#: templates/employees/employee_profile.html:45
 msgid "Are you sure you want to deactivate employee"
 msgstr "Ar tikrai norite deaktyvuoti darbuotoją"
 
@@ -328,6 +351,12 @@ msgstr "Ar tikrai norite deaktyvuoti darbuotoją"
 #: templates/employees/add_internal_permission.html:22
 #: templates/employees/deactivate_employee.html:22
 #: templates/employees/edit.html:23
+#: templates/employees/employee_profile.html:55
+#: templates/employees/employee_profile.html:86
+#: templates/employees/employee_profile.html:125
+#: templates/employees/employee_profile.html:283
+#: templates/employees/employee_profile.html:367
+#: templates/employees/employee_profile_copy.html:81
 #: templates/employees/external_permission_edit_template.html:22
 #: templates/employees/inactive_employees.html:164
 #: templates/employees/inactive_employees.html:192
@@ -338,17 +367,22 @@ msgid "Cancel"
 msgstr "Atšaukti"
 
 #: templates/employees/active_employees.html:183
+#: templates/employees/employee_profile_copy.html:40
 #: templates/employees/inactive_employees.html:214
 msgid "Permissions"
 msgstr "Leidimai"
 
 #: templates/employees/active_employees.html:187
+#: templates/employees/employee_profile.html:211
+#: templates/employees/employee_profile_copy.html:42
 #: templates/employees/inactive_employees.html:219
 msgid "Internal Permissions"
 msgstr "Vidiniai leidimai"
 
 #: templates/employees/active_employees.html:196
 #: templates/employees/active_employees.html:269
+#: templates/employees/employee_profile.html:225
+#: templates/employees/employee_profile.html:314
 #: templates/employees/inactive_employees.html:129
 #: templates/employees/inactive_employees.html:228
 #: templates/employees/inactive_employees.html:303
@@ -358,12 +392,14 @@ msgstr "Failas"
 #: templates/employees/active_employees.html:197
 #: templates/employees/active_employees.html:270
 #: templates/employees/active_employees.html:371
+#: templates/employees/employee_profile.html:315
 #: templates/employees/inactive_employees.html:229
 #: templates/employees/inactive_employees.html:304
 msgid "Actions"
 msgstr "Veiksmai"
 
 #: templates/employees/active_employees.html:238
+#: templates/employees/employee_profile.html:268
 #: templates/employees/inactive_employees.html:271
 msgid "Delete Internal Permission"
 msgstr "Ištrinti vidinį leidimą"
@@ -377,27 +413,34 @@ msgstr "Ar tikrai norite ištrinti leidimą Nr."
 
 #: templates/employees/active_employees.html:248
 #: templates/employees/active_employees.html:315
+#: templates/employees/employee_profile.html:281
+#: templates/employees/employee_profile.html:365
 #: templates/employees/inactive_employees.html:282
 #: templates/employees/inactive_employees.html:351
 msgid "Delete"
 msgstr "Ištrinti"
 
 #: templates/employees/active_employees.html:262
+#: templates/employees/employee_profile.html:302
+#: templates/employees/employee_profile_copy.html:47
 #: templates/employees/inactive_employees.html:296
 msgid "External Permissions"
 msgstr "Išoriniai leidimai"
 
 #: templates/employees/active_employees.html:305
+#: templates/employees/employee_profile.html:351
 #: templates/employees/inactive_employees.html:340
 msgid "Delete External Permission"
 msgstr "Ištrinti išorinį leidimą"
 
 #: templates/employees/active_employees.html:332
+#: templates/employees/employee_profile.html:214
 #: templates/employees/inactive_employees.html:369
 msgid "Add Internal Permission"
 msgstr "Pridėti vidinį leidimą"
 
 #: templates/employees/active_employees.html:333
+#: templates/employees/employee_profile.html:305
 #: templates/employees/inactive_employees.html:371
 msgid "Add External Permission"
 msgstr "Pridėti išorinį leidimą"
@@ -502,6 +545,95 @@ msgstr "Darbuotojo informacija atnaujinta sėkmingai!"
 msgid "Update Employee"
 msgstr "Atnaujinti informaciją apie darbuotoją"
 
+#: templates/employees/employee_profile.html:64
+#: templates/employees/employee_profile.html:85
+#: templates/employees/inactive_employees.html:145
+#: templates/employees/inactive_employees.html:163
+msgid "Reactivate"
+msgstr "Aktyvuoti"
+
+#: templates/employees/employee_profile.html:71
+#: templates/employees/inactive_employees.html:152
+msgid "Reactivate Employee"
+msgstr "Aktyvuoti"
+
+#: templates/employees/employee_profile.html:76
+#: templates/employees/inactive_employees.html:157
+msgid "Are you sure you want to reactivate"
+msgstr "Ar tikrai norite aktyvuoti"
+
+#: templates/employees/employee_profile.html:99
+#: templates/employees/employee_profile.html:124
+#: templates/employees/inactive_employees.html:173
+#: templates/employees/inactive_employees.html:191
+msgid "Delete Permanently"
+msgstr "Ištrinti visam laikui"
+
+#: templates/employees/employee_profile.html:107
+#: templates/employees/inactive_employees.html:181
+msgid "Delete Employee Permanently"
+msgstr "Ištrinti darbuotoją visam laikui"
+
+#: templates/employees/employee_profile.html:113
+#: templates/employees/inactive_employees.html:186
+msgid "Are you sure you want to delete"
+msgstr "Ar tikrai norite ištrinti"
+
+#: templates/employees/employee_profile.html:114
+msgid "permanently"
+msgstr "ištrinti visam laikui"
+
+#: templates/employees/employee_profile.html:117
+msgid "This action cannot be undone."
+msgstr "Šio veiksmo negalėsite anuliuoti."
+
+#: templates/employees/employee_profile.html:143
+msgid "Reason for Deactivation"
+msgstr "Deaktyvavimo priežastis"
+
+#: templates/employees/employee_profile.html:153
+msgid "Full Name"
+msgstr "Vardas"
+
+#: templates/employees/employee_profile.html:171
+#: templates/employees/index.html:143
+msgid "Phone"
+msgstr "Telefono numeris"
+
+#: templates/employees/employee_profile.html:189
+msgid "Contract"
+msgstr "Darbo sutartis"
+
+#: templates/employees/employee_profile.html:273
+#: templates/employees/employee_profile.html:356
+msgid "Are you sure you want to delete permission"
+msgstr "Ar tikrai norite ištrinti leidimą"
+
+#: templates/employees/employee_profile.html:275
+#: templates/employees/employee_profile.html:358
+msgid "No"
+msgstr "Nr"
+
+#: templates/employees/employee_profile_copy.html:29
+msgid "About"
+msgstr "Apie"
+
+#: templates/employees/employee_profile_copy.html:58
+msgid "Edit Profile"
+msgstr "Tvarkyti profilį"
+
+#: templates/employees/employee_profile_copy.html:59
+msgid "Deactivate Profile"
+msgstr "Deaktyvuoti profilį"
+
+#: templates/employees/employee_profile_copy.html:70
+msgid "Confirm Deactivation"
+msgstr "Patvirtinti deaktyvacija"
+
+#: templates/employees/employee_profile_copy.html:74
+msgid "Are you sure you want to deactivate this profile?"
+msgstr "Ar tikrai norite deaktyvuoti darbuotoją?"
+
 #: templates/employees/external_permission_edit_template.html:7
 msgid "External permission updated successfully!"
 msgstr "Išorinis leidimas atnaujintas sėkmingai!"
@@ -519,41 +651,23 @@ msgstr "Neaktyvūs darbuotojai"
 msgid "Reason of Deactivation"
 msgstr "Deaktyvavimo priežastis"
 
-#: templates/employees/inactive_employees.html:145
-#: templates/employees/inactive_employees.html:163
-msgid "Reactivate"
-msgstr "Aktyvuoti"
-
-#: templates/employees/inactive_employees.html:152
-msgid "Reactivate Employee"
-msgstr "Aktyvuoti"
-
-#: templates/employees/inactive_employees.html:157
-msgid "Are you sure you want to reactivate"
-msgstr "Ar tikrai norite aktyvuoti"
-
-#: templates/employees/inactive_employees.html:173
-#: templates/employees/inactive_employees.html:191
-msgid "Delete Permanently"
-msgstr "Ištrinti visam laikui"
-
-#: templates/employees/inactive_employees.html:181
-msgid "Delete Employee Permanently"
-msgstr "Ištrinti darbuotoją visam laikui"
-
-#: templates/employees/inactive_employees.html:186
-msgid "Are you sure you want to delete"
-msgstr "Ar tikrai norite ištrinti"
-
 #: templates/employees/inactive_employees.html:186
 msgid "permanently? This action cannot be undone."
 msgstr "visam laikui? Šio veiksmo negalėsite anuliuoti."
 
-#: templates/employees/index.html:14
+#: templates/employees/index.html:13
+msgid "Internal Permissions Expiring Soon"
+msgstr "Greitai pasibaigiantys galioti išoriniai leidimai"
+
+#: templates/employees/index.html:48
+msgid "External Permissions Expiring Soon"
+msgstr "Greitai pasibaigiantys galioti vidiniai leidimai"
+
+#: templates/employees/index.html:84
 msgid "Employees with birthdays this month"
 msgstr "Gimtadieniai šį mėnesį"
 
-#: templates/employees/index.html:43
+#: templates/employees/index.html:167
 msgid "No birthdays this month."
 msgstr "Šį mėnesį gimtadienių nėra."
 
@@ -661,6 +775,9 @@ msgid ""
 msgstr ""
 "Jums bus išsiųstas el. laiškas su instrukcijomis, kaip iš naujo nustatyti "
 "slaptažodį."
+
+#~ msgid "City"
+#~ msgstr "Miestas"
 
 #~ msgid "Confirm Password"
 #~ msgstr "Pakartoti slaptažodį"

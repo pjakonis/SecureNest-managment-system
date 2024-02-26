@@ -6,7 +6,7 @@
 
 {% block body %}
 
-<div class="row mt-5">
+<div class="row mt-4">
   <div class="col-12">
     {% if employees %}
     <div class="card bg-light ms-4 me-4 mb-4">
@@ -56,7 +56,7 @@
             </thead>
             <tbody>
             {% for employee in employees %}
-            <tr>
+            <tr onclick="window.location='{% url 'employee_profile' employee.id %}';" style="cursor:pointer;">
               <td class="align-middle text-center">
                 <img src="{{ employee.photo.url|default:'url_to_default_photo' }}" alt="{{ employee.first_name }}"
                      class="img-fluid rounded-circle" style="width: 50px; height: 50px; object-fit: cover;">
@@ -65,21 +65,21 @@
               <td class="align-middle">{{ employee.last_name }}</td>
               <td class="align-middle">{{ employee.department }}</td>
               <td class="align-middle">{{ employee.position }}</td>
-              <td class="align-middle">
+              <td class="align-middle" onclick="event.stopPropagation();">
                 <button type="button" class="btn btn-info me-1" data-bs-toggle="modal"
-                        data-bs-target="#myModal{{employee.id}}">
+                        data-bs-target="#myModal{{employee.id}}" onclick="event.stopPropagation();">
                   <i class="fa-solid fa-circle-info fa-lg"></i>
                 </button>
 
                 <div class="modal fade" id="myModal{{employee.id}}" tabindex="-1"
-                     aria-labelledby="modalLabel{{employee.id}}" aria-hidden="true">
-                  <div class="modal-dialog modal-xl"> <!-- Use Bootstrap's modal-xl for a wider modal -->
+                     aria-labelledby="modalLabel{{employee.id}}" aria-hidden="true" onclick="event.stopPropagation();">
+                  <div class="modal-dialog modal-xl" onclick="event.stopPropagation();"> <!-- Use Bootstrap's modal-xl for a wider modal -->
                     <div class="modal-content">
                       <div class="modal-header">
                         <h5 class="modal-title" id="modalLabel{{employee.id}}">
                           {{ employee.first_name }} {{ employee.last_name }}
                         </h5>
-                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="{% blocktrans %}Close{% endblocktrans %}"></button>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="{% blocktrans %}Close{% endblocktrans %}" onclick="event.stopPropagation();"></button>
                       </div>
                       <div class="modal-body">
                         <div class="row">
@@ -119,7 +119,7 @@
                                 <td>{{ employee.employee_information.address }}</td>
                               </tr>
                               <tr>
-                                <th scope="row">{% trans "City" %}</th>
+                                <th scope="row">{% trans "Employment Contract" %}</th>
                                 <td>
                                   {% if employee.attachment %}
                                   <a href="{{ employee.attachment.url }}" target="_blank">
@@ -170,7 +170,7 @@
                   </div>
                 </div>
                 <button type="button" class="btn btn-warning me-1" data-bs-toggle="modal"
-                        data-bs-target="#permissionsModal{{employee.id}}">
+                        data-bs-target="#permissionsModal{{employee.id}}" onclick="event.stopPropagation();">
                   <i class="fa-regular fa-id-badge fa-lg"></i>
                 </button>
                 <!-- Permissions Modal -->
@@ -194,7 +194,7 @@
                             <th>{% trans "Description" %}</th>
                             <th>{% trans "Tag" %}</th>
                             <th>{% trans "File" %}</th>
-                            <th style="width: 120px;">{% trans "Actions" %}</th>
+                            <th style="width: 120px;"></th>
                           </tr>
                           </thead>
                           <tbody>
@@ -267,7 +267,7 @@
                             <th>{% trans "Permit Issue Date" %}</th>
                             <th>{% trans "Permit Expiration Date" %}</th>
                             <th>{% trans "File" %}</th>
-                            <th>{% trans "Actions" %}</th>
+                            <th></th>
                           </tr>
                           </thead>
                           <tbody>
@@ -368,7 +368,7 @@
               <th scope="col"><a>{% trans "Last Name" %}</a></th>
               <th scope="col"><a>{% trans "Department" %}</a></th>
               <th scope="col"><a>{% trans "Position" %}</a></th>
-              <th scope="col">{% trans "Actions" %}</th>
+              <th scope="col"></th>
             </tr>
             </thead>
           </table>
