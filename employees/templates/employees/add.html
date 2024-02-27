@@ -8,7 +8,7 @@
 <div class="alert alert-success" role="alert">
   {% trans "New employee added successfully!" %}
   <a href="{% url 'active_employees' %}" class="alert-link">{% trans "Employee list" %}</a>
-  or
+  {% trans "or" %}
   <a href="{% url 'index' %}" class="alert-link">{% trans "Home" %}</a>
 </div>
 {% else %}
@@ -23,7 +23,7 @@
           {% csrf_token %}
           {{ form.as_p }}
           <button type="submit" class="btn btn-primary">{% trans "Add" %}</button>
-          <a href="{% url 'index' %}" class="btn btn-secondary">{% trans "Cancel" %}</a>
+          <a href="{% url 'active_employees' %}" class="btn btn-secondary">{% trans "Cancel" %}</a>
         </form>
       </div>
     </div>

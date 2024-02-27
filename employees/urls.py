@@ -44,5 +44,7 @@ urlpatterns = [
                   path('register/', register, name='register'),
                   path('expired_token/', register, name='expired_token'),
                   path('employee/<int:id>/profile/', views.employee_profile, name='employee_profile'),
-
+                  path('departments/', views.departments, name='departments'),
+                  path('departments/<int:department_id>/employees/', views.department_employees, name='department_employees'),
+                  path('settings/', views.user_settings, name='user_settings'),
               ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

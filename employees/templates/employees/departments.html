@@ -1,0 +1,84 @@
+{% extends 'employees/base.html' %}
+{% load i18n %}
+
+{% block body %}
+<div class="row mt-4">
+  <div class="col-12">
+    {% if departments %}
+    <div class="card bg-light ms-4 me-4 mb-4">
+      <div class="card-header d-flex justify-content-between align-items-center">
+        <div style="color: #e85d04;"><i class="fa-solid fa-building fa-lg" style="color: #e85d04;"></i>
+          {% trans "Departments" %}</div>
+      </div>
+      <div class="card-body">
+          <div class="mb-3"> <form method="get" action=".">
+              <div class="input-group">
+                {% if request.GET.q %}
+                <a href="{% url 'departments' %}" class="btn btn-outline-secondary"><i class="fa fa-times"></i></a>
+                {% endif %}
+                <input type="text" class="form-control" placeholder="{% trans "Search for a department..." %}"
+                       name="q" value="{{ request.GET.q }}"/>
+                <button class="btn btn-outline-secondary" type="submit"><i class="fa fa-search"></i>
+                  {% trans "Search" %}</button>
+              </div>
+            </form>
+          </div>
+          <div class="table-responsive">
+              <table class="table table-hover">
+                <thead>
+                  <tr>
+                    <th scope="col"  class="small">{% trans "Department" %}</th>
+                    <th scope="col" class="small">{% trans "Number of Employees" %}</th>
+                  </tr>
+                </thead>
+                <tbody>
+                {% for department, employee_count in departments %}
+                <tr onclick="window.location.href='{% url 'active_employees' %}?department_id={{ department.id }}'">
+                  <td>{{ department.name }}</td>
+                  <td>{{ employee_count }}</td>
+                </tr>
+                {% empty %}
+                {% endfor %}
+                </tbody>
+              </table>
+          </div>
+      </div>
+    </div>
+    {% else %}
+    <div class="card bg-light ms-4 me-4 mb-4">
+      <div class="card-header d-flex justify-content-between align-items-center">
+        <div style="color: #e85d04;"><i class="fa-solid fa-building fa-lg" style="color: #e85d04;"></i>
+          {% trans "Departments" %}</div>
+      </div>
+      <div class="card-body">
+        <div class="mb-3"> <form method="get" action=".">
+            <div class="input-group">
+              {% if request.GET.q %}
+                <a href="{% url 'departments' %}" class="btn btn-outline-secondary"><i class="fa fa-times"></i></a>
+                {% endif %}
+              <input type="text" class="form-control" placeholder="{% trans "Search for a department (starts with)..." %}"
+                     name="q" value="{{ request.GET.q }}"/>
+              <button class="btn btn-outline-secondary" type="submit"><i class="fa fa-search"></i>
+                {% trans "Search" %}</button>
+            </div>
+          </form>
+        </div>
+        <div class="table-responsive">
+          <table class="table table-hover">
+            <thead>
+              <tr>
+                <th scope="col">{% trans "Department" %}</th>
+                <th scope="col">{% trans "Number of Employees" %}</th>
+              </tr>
+            </thead>
+          </table>
+          <div class="text-center">
+            <h6>{% trans "No departments found." %}</h6>
+          </div>
+        </div>
+      </div>
+    </div>
+    {% endif %}
+  </div>
+</div>
+{% endblock %}

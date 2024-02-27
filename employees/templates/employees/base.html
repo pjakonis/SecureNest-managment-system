@@ -29,6 +29,11 @@
                         <i class="fa-solid fa-house fa-lg"></i> {% trans "Home" %}
                     </a>
                 </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="{% url 'departments' %}">
+                        <i class="fa-solid fa-building fa-lg"></i> {% trans "Departments" %}
+                    </a>
+                </li>
                 <li class="nav-item dropdown">
                     <a class="nav-link dropdown-toggle" data-bs-toggle="dropdown" href="#" role="button" aria-haspopup="true"
                        aria-expanded="false">
@@ -63,7 +68,8 @@
                                   style="display: none;">
                                 {% csrf_token %}
                                 <input type="hidden" name="language" value="{{ lang.0 }}">
-                                <input type="hidden" name="next" value="{{ request.path }}">
+                                <!-- Update this line to use get_full_path -->
+                                <input type="hidden" name="next" value="{{ request.get_full_path }}">
                             </form>
                         </li>
                         {% endfor %}
@@ -84,6 +90,8 @@
                         <li><hr class="dropdown-divider"></li>
                         {% endif %}
 
+                        <li><a class="dropdown-item" href="{% url 'user_settings' %}"><i class="fa-solid fa-gear fa-lg"></i> {% trans "Settings" %}</a></li>
+                        <li><hr class="dropdown-divider"></li>
                         <li>
                             <form action="{% url 'logout' %}" method="post">
                                 {% csrf_token %}

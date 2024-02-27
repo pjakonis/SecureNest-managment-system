@@ -1,0 +1,61 @@
+{% extends 'employees/base.html' %}
+
+{% load i18n %}
+
+{% block body %}
+
+<div class="container mt-4">
+    <div class="row justify-content-center">
+        <!-- Username Change Section -->
+        <div class="col-md-6">
+            <div class="card bg-light mb-3">
+                <div class="card-header"><i class="fa-regular fa-address-card fa-lg"></i> {% trans "Change Username" %}</div>
+                <div class="card-body">
+                    <form method="post" novalidate>
+                        {% csrf_token %}
+                        <div class="form-group">
+                            <input type="text" class="form-control mt-1" id="usernameInput" name="username" value="{{ user_form.username.value }}" placeholder="{% trans 'Enter new username' %}" required>
+                            {% for error in user_form.username.errors %}
+                                <div class="alert alert-danger">{{ error }}</div>
+                            {% endfor %}
+                        </div>
+                        <button type="submit" name="change_username" class="btn btn-primary mt-3">{% trans "Change Username" %}</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+
+        <!-- Password Change Section -->
+        <div class="col-md-6">
+            <div class="card bg-light mb-3">
+                <div class="card-header"><i class="fa-solid fa-key fa-lg"></i> {% trans "Change Password" %}</div>
+                <div class="card-body">
+                    <form method="post" novalidate>
+                        {% csrf_token %}
+                        <div class="form-group">
+                            <input type="password" class="form-control mt-1" id="oldPasswordInput" name="old_password" placeholder="{% trans 'Enter old password' %}" required>
+                            {% for error in password_form.old_password.errors %}
+                                <div class="alert alert-danger">{{ error }}</div>
+                            {% endfor %}
+                        </div>
+                        <div class="form-group">
+                            <input type="password" class="form-control mt-4" id="newPasswordInput" name="new_password" placeholder="{% trans 'Enter new password' %}" required>
+                            {% for error in password_form.new_password.errors %}
+                                <div class="alert alert-danger">{{ error }}</div>
+                            {% endfor %}
+                        </div>
+                        <div class="form-group">
+                            <input type="password" class="form-control mt-2" id="confirmNewPasswordInput" name="confirm_new_password" placeholder="{% trans 'Confirm new password' %}" required>
+                            {% for error in password_form.confirm_new_password.errors %}
+                                <div class="alert alert-danger">{{ error }}</div>
+                            {% endfor %}
+                        </div>
+                        <button type="submit" name="change_password" class="btn btn-primary mt-3">{% trans "Change Password" %}</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% endblock %}
