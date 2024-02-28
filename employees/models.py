@@ -1,10 +1,12 @@
-import uuid
-
 from django.utils.translation import gettext_lazy as _
-from PIL import Image
 from django.db import models
 from django.utils import timezone
+
+from PIL import Image
+
 from datetime import timedelta, date
+
+import uuid
 
 
 class Employee(models.Model):
@@ -18,13 +20,15 @@ class Employee(models.Model):
         (VERIFICATION_INACTIVE, VERIFICATION_INACTIVE_NAME),
     ]
 
-    first_name = models.CharField(max_length=25, verbose_name=_('First name'))
-    last_name = models.CharField(max_length=50, verbose_name=_('Last name'))
-    photo = models.ImageField(upload_to='employee_photos/', default='default_photo.jpg', blank=True, null=True, verbose_name=_('Photo'))
+    first_name = models.CharField(max_length=255, verbose_name=_('First name'))
+    last_name = models.CharField(max_length=255, verbose_name=_('Last name'))
+    photo = models.ImageField(upload_to='employee_photos/', default='default_photo.jpg', blank=True, null=True,
+                              verbose_name=_('Photo'))
     hire_date = models.DateField(default=None, null=True, verbose_name=_('Hire date'))
     department = models.ForeignKey('Department', on_delete=models.CASCADE, verbose_name=_('Department'))
     position = models.ForeignKey('Position', on_delete=models.CASCADE, verbose_name=_('Position'))
-    verification = models.CharField(max_length=1, choices=VERIFICATION_CHOICES, default=VERIFICATION_ACTIVE, verbose_name=_('Verification'))
+    verification = models.CharField(max_length=1, choices=VERIFICATION_CHOICES, default=VERIFICATION_ACTIVE,
+                                    verbose_name=_('Verification'))
     attachment = models.FileField(upload_to='employees/', null=True, blank=True, verbose_name=_('Attachment'))
 
     def __str__(self):
@@ -41,10 +45,8 @@ class Employee(models.Model):
         if self.photo:
             img = Image.open(self.photo.path)
 
-            # Using Image.Resampling.LANCZOS for high-quality downsampling
             img.thumbnail((300, 300), Image.Resampling.LANCZOS)
 
-            # Check if the image needs to be cropped to 300x300
             img_width, img_height = img.size
             if img_width > 300 or img_height > 300:
                 left = (img_width - 300) / 2
@@ -60,8 +62,9 @@ class Employee_information(models.Model):
     employee = models.OneToOneField(Employee, on_delete=models.CASCADE, primary_key=True, verbose_name=_('Employee'))
     date_of_birth = models.DateField(null=True, blank=True, verbose_name=_('Date of birth'))
     email = models.EmailField(unique=True, null=True, blank=True, verbose_name=_('Email'))
-    phone_number = models.CharField(max_length=30, unique=True, null=True, blank=True, default=None, verbose_name=_('Phone number'))
-    address = models.CharField(max_length=255, null=True, blank=True, verbose_name=_('Address'))
+    phone_number = models.CharField(max_length=255, unique=True, null=True, blank=True, default=None,
+                                    verbose_name=_('Phone number'))
+    address = models.CharField(max_length=1500, null=True, blank=True, verbose_name=_('Address'))
 
     def __str__(self):
         return f'{self.employee.first_name} {self.employee.last_name}'
@@ -122,7 +125,8 @@ class Internal_permission(models.Model):
     permit_expiry_date = models.DateField(verbose_name=_('Permit expiry date'))
     description = models.TextField(max_length=255, null=True, blank=True, verbose_name=_('Description'))
     tag = models.CharField(max_length=2, choices=TAG_CHOICES, default=TAG_REJECTED, verbose_name=_('Tag'))
-    attachment = models.FileField(upload_to='internal_permissions/', null=True, blank=True, verbose_name=_('Attachment'))
+    attachment = models.FileField(upload_to='internal_permissions/', null=True, blank=True,
+                                  verbose_name=_('Attachment'))
 
     @property
     def is_expiring_or_expired(self):
@@ -149,7 +153,8 @@ class External_permission(models.Model):
     permit_number = models.CharField(max_length=10, unique=True, null=True, blank=True, verbose_name=_('Permit number'))
     permit_issue_date = models.DateField(verbose_name=_('Permit issue date'))
     permit_expiry_date = models.DateField(verbose_name=_('Permit expiry date'))
-    attachment = models.FileField(upload_to='external_permissions/', null=True, blank=True, verbose_name=_('Attachment'))
+    attachment = models.FileField(upload_to='external_permissions/', null=True, blank=True,
+                                  verbose_name=_('Attachment'))
 
     @property
     def is_expiring_or_expired(self):
@@ -179,6 +184,10 @@ class DeactivationLog(models.Model):
     def __str__(self):
         return f'{self.employee.first_name} {self.employee.last_name}'
 
+    class Meta:
+        verbose_name_plural = _('Deactivation logs')
+        verbose_name = _('Deactivation log')
+
 
 class Invitation(models.Model):
     email = models.EmailField(unique=False, verbose_name=_('Email'))
@@ -190,3 +199,6 @@ class Invitation(models.Model):
     def __str__(self):
         return self.email
 
+    class Meta:
+        verbose_name_plural = _('Invitations')
+        verbose_name = _('Invitation')

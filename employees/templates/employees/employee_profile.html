@@ -21,7 +21,7 @@
                  class="img-fluid rounded-circle" style="width: 150px; height: 150px; object-fit: cover;">
             <h5 class="my-3 mb-1">{{ employee.first_name }} {{ employee.last_name }}</h5>
             <p class="text-muted mb-0">{{ employee.position.name }}</p>
-            <p class="text-muted mb-3">{{ employee.department.name }}</p>
+            <p class="text-muted mb-3">{{ employee.department.name }} {% trans "Departament" %}</p>
             <div class="d-flex justify-content-center mb-2">
               <a class="btn btn-warning" href="{% url 'edit_employee' employee.id %}">
                 {% trans "Update" %}</a>

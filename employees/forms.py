@@ -1,10 +1,9 @@
-from django import forms
-from .models import Employee, Employee_information, Department, Position, Internal_permission, External_permission, \
-    DeactivationLog
+from django.contrib.auth.hashers import check_password
 from django.utils.translation import gettext_lazy as _
 from django import forms
 from django.contrib.auth.models import User
 
+from .models import Employee, Employee_information, Internal_permission, External_permission, DeactivationLog
 
 
 class EmployeeForm(forms.ModelForm):
@@ -14,6 +13,7 @@ class EmployeeForm(forms.ModelForm):
         required=False,
         label=_('Hire date')
     )
+
     class Meta:
         model = Employee
         fields = '__all__'
@@ -147,4 +147,3 @@ class PasswordChangeForm(forms.Form):
         if new_password and new_password != confirm_new_password:
             self.add_error('confirm_new_password', "The two password fields must match.")
         return cleaned_data
-
