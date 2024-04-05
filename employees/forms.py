@@ -13,7 +13,7 @@ from django.forms import ModelChoiceField
 
 class EmployeeForm(forms.ModelForm):
     # Override the department field for custom input
-    department = ModelChoiceField(label=_("Department"), required=False, to_field_name="name")
+    department = ModelChoiceField(queryset=Department.objects.all(), label=_("Department"), required=False, to_field_name="name")
 
     # Customize hire_date field
     hire_date = forms.DateField(
