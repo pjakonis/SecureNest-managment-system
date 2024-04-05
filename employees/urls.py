@@ -8,6 +8,9 @@ from .views import CustomPasswordResetConfirmView, delete_external_permission, d
 
 from . import views
 
+from django.urls import re_path
+from django.views.static import serve
+
 urlpatterns = [
                   path('', views.index, name='index'),
                   path('<int:id>', views.view_employee, name='view_employee'),
@@ -48,4 +51,9 @@ urlpatterns = [
                   path('departments/', views.departments, name='departments'),
                   path('departments/<int:department_id>/employees/', views.department_employees, name='department_employees'),
                   path('settings/', views.user_settings, name='user_settings'),
-              ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
+
+              ]
+
+if settings.DEBUG:
+    urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
+    urlpatterns += static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)

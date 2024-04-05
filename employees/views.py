@@ -16,13 +16,15 @@ from django.contrib.auth.password_validation import validate_password
 from django.conf import settings
 from django.db.models import Q, Prefetch
 from django.utils.translation import gettext as _
+import json
+
 
 from .models import Invitation
 
 from datetime import timedelta, date
 
 from .models import Employee_information, Department, Internal_permission, External_permission, \
-    DeactivationLog, Employee
+    DeactivationLog, Employee, Position
 
 from .forms import EmployeeForm, EmployeeInformationForm, DeactivationLogForm, InternalPermissionForm, \
     ExternalPermissionForm, UsernameChangeForm
@@ -130,40 +132,32 @@ def add_employee(request):
         form = EmployeeForm(request.POST, request.FILES)
         if form.is_valid():
             new_employee = form.save()
-            return render(request, 'employees/add.html', {
-                'form': EmployeeForm(),
-                'success': True
-            })
+            messages.success(request, 'New employee added successfully.')
+            return redirect('add_employee')  # Redirect to the appropriate URL
         else:
-            return render(request, 'employees/add.html', {
-                'form': form
-            })
+            messages.error(request, 'There was an error with the form. Please check the input.')
     else:
         form = EmployeeForm()
-        return render(request, 'employees/add.html', {
-            'form': form
-        })
+
+    return render(request, 'employees/add.html', {'form': form})
 
 
 @login_required
-def add_employee_information(request):
+def add_employee(request):
     if request.method == 'POST':
-        form = EmployeeInformationForm(request.POST)
+        form = EmployeeForm(request.POST, request.FILES)
         if form.is_valid():
-            new_employee_information = form.save()
-            return render(request, 'employees/add.html', {
-                'form': EmployeeInformationForm(),
-                'success': True
-            })
+            form.save()
+            messages.success(request, 'New employee added successfully.')
+            return redirect('add_employee')
         else:
-            return render(request, 'employees/add.html', {
-                'form': form
-            })
+            messages.error(request, 'There was an error with the form. Please check the input.')
     else:
-        form = EmployeeInformationForm()
-        return render(request, 'employees/add.html', {
-            'form': form
-        })
+        form = EmployeeForm()
+        departments = Department.objects.all().values_list('id', 'name')
+        departments_json = json.dumps(list(departments))
+
+    return render(request, 'employees/add.html', {'form': form, 'departments_json': departments_json})
 
 
 @login_required
@@ -218,7 +212,7 @@ def reactivate_employee(request, id):
     employee = get_object_or_404(Employee, pk=id)
     employee.verification = Employee.VERIFICATION_ACTIVE
     employee.save()
-    return redirect('inactive_employees')
+    return redirect('employee_profile', id=employee.id)
 
 
 @login_required
@@ -283,7 +277,7 @@ def add_internal_permission(request, employee_id):
         if form.is_valid():
             form.save()
             messages.success(request, _("Internal permission added successfully."))
-            return redirect('active_employees')
+            return redirect('employee_profile', id=employee.id)
     else:
         form = InternalPermissionForm(initial={'employee': employee})
 
@@ -301,7 +295,7 @@ def add_external_permission(request, employee_id):
         if form.is_valid():
             form.save()
             messages.success(request, _("External permission added successfully."))
-            return redirect('active_employees')
+            return redirect('employee_profile', id=employee.id)
     else:
         form = ExternalPermissionForm(initial={'employee': employee})
     return render(request, 'employees/add_external_permission.html', {
@@ -313,29 +307,37 @@ def add_external_permission(request, employee_id):
 @login_required
 def edit_internal_permission(request, permission_id):
     permission = get_object_or_404(Internal_permission, pk=permission_id)
+    employee_id = permission.employee.id  # Capture the employee ID
+
     if request.method == 'POST':
         form = InternalPermissionForm(request.POST, request.FILES, instance=permission)
         if form.is_valid():
             form.save()
-            return redirect('active_employees')
+            messages.success(request, _('Internal permission updated successfully.'))
+            return redirect('employee_profile', id=employee_id)  # Redirect to the employee's profile
     else:
         form = InternalPermissionForm(instance=permission)
 
     return render(request, 'employees/internal_permission_edit_template.html', {'form': form})
 
 
+
 @login_required
 def edit_external_permission(request, permission_id):
     permission = get_object_or_404(External_permission, pk=permission_id)
+    employee_id = permission.employee.id  # Capture the employee ID associated with the permission
+
     if request.method == 'POST':
         form = ExternalPermissionForm(request.POST, request.FILES, instance=permission)
         if form.is_valid():
             form.save()
-            return redirect('active_employees')
+            messages.success(request, _('External permission updated successfully.'))
+            return redirect('employee_profile', id=employee_id)  # Redirect to the employee's profile
     else:
         form = ExternalPermissionForm(instance=permission)
 
     return render(request, 'employees/external_permission_edit_template.html', {'form': form})
+
 
 
 @require_POST
@@ -346,21 +348,24 @@ def delete_employee_permanently(request, pk):
     return redirect('inactive_employees')
 
 
+@login_required
 @require_POST
 def delete_internal_permission(request, permission_id):
     permission = get_object_or_404(Internal_permission, pk=permission_id)
+    employee_id = permission.employee.id  # Assuming the permission model has a foreign key to Employee
     permission.delete()
     messages.success(request, _('Internal permission deleted successfully.'))
-    return redirect('active_employees')
+    return redirect('employee_profile', id=employee_id)
 
 
 @login_required
 @require_POST
 def delete_external_permission(request, permission_id):
     permission = get_object_or_404(External_permission, pk=permission_id)
+    employee_id = permission.employee.id  # Assuming the permission model has a foreign key to Employee
     permission.delete()
     messages.success(request, _('External permission deleted successfully.'))
-    return redirect('active_employees')
+    return redirect('employee_profile', id=employee_id)
 
 
 class CustomPasswordResetConfirmView(PasswordResetConfirmView):

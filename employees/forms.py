@@ -6,7 +6,16 @@ from django.contrib.auth.models import User
 from .models import Employee, Employee_information, Internal_permission, External_permission, DeactivationLog
 
 
+from django import forms
+from .models import Employee, Department
+from django.utils.translation import gettext_lazy as _
+from django.forms import ModelChoiceField
+
 class EmployeeForm(forms.ModelForm):
+    # Override the department field for custom input
+    department = ModelChoiceField(label=_("Department"), required=False, to_field_name="name")
+
+    # Customize hire_date field
     hire_date = forms.DateField(
         input_formats=['%Y-%m-%d'],
         widget=forms.DateInput(attrs={'class': 'form-control', 'type': 'date'}, format='%Y-%m-%d'),
@@ -21,9 +30,9 @@ class EmployeeForm(forms.ModelForm):
             'first_name': _('First Name'),
             'last_name': _('Last Name'),
             'photo': _('Photo'),
-            'hire_date': _('Hire Date'),
             'department': _('Department'),
             'position': _('Position'),
+            'hire_date': _('Hire Date'),
             'verification': _('Verification'),
             'attachment': _('Employment Contract'),
         }
@@ -31,12 +40,29 @@ class EmployeeForm(forms.ModelForm):
             'first_name': forms.TextInput(attrs={'class': 'form-control'}),
             'last_name': forms.TextInput(attrs={'class': 'form-control'}),
             'photo': forms.FileInput(attrs={'class': 'form-control'}),
+            'position': forms.Select(attrs={'class': 'form-control select2'}),
             'hire_date': forms.DateInput(attrs={'class': 'form-control', 'type': 'date'}, format='%Y-%m-%d'),
-            'department': forms.Select(attrs={'class': 'form-control'}),
-            'position': forms.Select(attrs={'class': 'form-control'}),
             'verification': forms.HiddenInput(),
             'attachment': forms.FileInput(attrs={'class': 'form-control'}),
         }
+
+    def clean_department(self):
+        department_data = self.cleaned_data.get('department')
+
+        if not department_data:
+            raise forms.ValidationError("This field is required.")
+
+        if department_data.isdigit():
+            # Check if the department with this ID exists
+            try:
+                return Department.objects.get(id=department_data)
+            except Department.DoesNotExist:
+                raise forms.ValidationError("Department with this ID does not exist.")
+        else:
+            # Create or get a department by name
+            department, created = Department.objects.get_or_create(name=department_data)
+            return department
+
 
 
 class EmployeeInformationForm(forms.ModelForm):

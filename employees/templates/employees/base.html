@@ -9,6 +9,8 @@
     <title>SecureNest</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
     <link href="{% static 'css/bootstrap.min.css' %}" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/select2/dist/css/select2.min.css" rel="stylesheet" />
+    <link href="https://cdn.jsdelivr.net/npm/select2-bootstrap4-theme/dist/select2-bootstrap4.min.css" rel="stylesheet">
 </head>
 <body class="d-flex flex-column min-vh-100">
 <nav class="navbar navbar-expand-lg navbar-dark bg-primary">
@@ -121,7 +123,7 @@
 {% endif %}
     {% block body %}{% endblock %}
 </div>
-<footer class="footer mt-auto mb-auto">
+<footer class="footer mt-auto">
     <div class="text-center mb-3 mt-3">
         <span>Copyright &copy; <script>document.write(new Date().getFullYear())</script></span>
     </div>

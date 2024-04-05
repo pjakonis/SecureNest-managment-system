@@ -1,5 +1,4 @@
 {% extends 'employees/base.html' %}
-
 {% load i18n %}
 
 {% block body %}
@@ -19,7 +18,7 @@
         <i class="fa-solid fa-address-card fa-lg"></i> {% trans "New Employee" %}
       </div>
       <div class="card-body">
-        <form method="POST" action="" enctype="multipart/form-data">
+        <form method="POST" action="" enctype="multipart/form-data" id="addEmployeeForm">
           {% csrf_token %}
           {{ form.as_p }}
           <button type="submit" class="btn btn-primary">{% trans "Add" %}</button>
@@ -30,4 +29,48 @@
   </div>
 </div>
 {% endif %}
+
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.13/js/select2.min.js"></script>
+<script>
+$(document).ready(function() {
+    var departmentsData = {{ departments_json | safe }};
+
+    $('#id_department').select2({
+        theme: 'bootstrap4',
+        data: departmentsData,
+        tags: true,
+        createTag: function (params) {
+            var term = $.trim(params.term);
+            if (term === '') {
+                return null;
+            }
+
+            // Basic AJAX for Department Creation
+            $.ajax({
+                url: "{% url 'add_employee' %}", // Adjust URL if needed
+                type: 'POST',
+                data: {
+                    'department_name': term,
+                    'is_ajax': true // To let your view know it's an AJAX request
+                 },
+                 dataType: 'json',
+                 success: function (response) {
+                     if (response.success) {
+                         // Create new Select2 option
+                         var newOption = new Option(term, response.department_id, false, true);
+                         $('#id_department').append(newOption).trigger('change');
+                     } else {
+                         // Handle potential errors here
+                         alert("Error creating department!");
+                     }
+                 }
+            });
+
+            return null;
+        }
+    });
+});
+</script>
+
 {% endblock %}
